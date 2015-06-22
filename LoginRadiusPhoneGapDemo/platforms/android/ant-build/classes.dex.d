@@ -1,0 +1,23 @@
+G:\Phonegap\LoginRadiusPhoneGapDemo\platforms\android\ant-build\classes.dex : \
+G:\Phonegap\LoginRadiusPhoneGapDemo\platforms\android\ant-build\classes\com\phonegap\helloworld\BuildConfig.class \
+G:\Phonegap\LoginRadiusPhoneGapDemo\platforms\android\ant-build\classes\com\phonegap\helloworld\CordovaApp.class \
+G:\Phonegap\LoginRadiusPhoneGapDemo\platforms\android\ant-build\classes\com\phonegap\helloworld\R$attr.class \
+G:\Phonegap\LoginRadiusPhoneGapDemo\platforms\android\ant-build\classes\com\phonegap\helloworld\R$drawable.class \
+G:\Phonegap\LoginRadiusPhoneGapDemo\platforms\android\ant-build\classes\com\phonegap\helloworld\R$string.class \
+G:\Phonegap\LoginRadiusPhoneGapDemo\platforms\android\ant-build\classes\com\phonegap\helloworld\R$xml.class \
+G:\Phonegap\LoginRadiusPhoneGapDemo\platforms\android\ant-build\classes\com\phonegap\helloworld\R.class \
+G:\Phonegap\LoginRadiusPhoneGapDemo\platforms\android\ant-build\classes\org\apache\cordova\inappbrowser\InAppBrowser$1.class \
+G:\Phonegap\LoginRadiusPhoneGapDemo\platforms\android\ant-build\classes\org\apache\cordova\inappbrowser\InAppBrowser$2.class \
+G:\Phonegap\LoginRadiusPhoneGapDemo\platforms\android\ant-build\classes\org\apache\cordova\inappbrowser\InAppBrowser$3.class \
+G:\Phonegap\LoginRadiusPhoneGapDemo\platforms\android\ant-build\classes\org\apache\cordova\inappbrowser\InAppBrowser$4$1.class \
+G:\Phonegap\LoginRadiusPhoneGapDemo\platforms\android\ant-build\classes\org\apache\cordova\inappbrowser\InAppBrowser$4.class \
+G:\Phonegap\LoginRadiusPhoneGapDemo\platforms\android\ant-build\classes\org\apache\cordova\inappbrowser\InAppBrowser$5$1.class \
+G:\Phonegap\LoginRadiusPhoneGapDemo\platforms\android\ant-build\classes\org\apache\cordova\inappbrowser\InAppBrowser$5$2.class \
+G:\Phonegap\LoginRadiusPhoneGapDemo\platforms\android\ant-build\classes\org\apache\cordova\inappbrowser\InAppBrowser$5$3.class \
+G:\Phonegap\LoginRadiusPhoneGapDemo\platforms\android\ant-build\classes\org\apache\cordova\inappbrowser\InAppBrowser$5$4.class \
+G:\Phonegap\LoginRadiusPhoneGapDemo\platforms\android\ant-build\classes\org\apache\cordova\inappbrowser\InAppBrowser$5.class \
+G:\Phonegap\LoginRadiusPhoneGapDemo\platforms\android\ant-build\classes\org\apache\cordova\inappbrowser\InAppBrowser$InAppBrowserClient.class \
+G:\Phonegap\LoginRadiusPhoneGapDemo\platforms\android\ant-build\classes\org\apache\cordova\inappbrowser\InAppBrowser.class \
+G:\Phonegap\LoginRadiusPhoneGapDemo\platforms\android\ant-build\classes\org\apache\cordova\inappbrowser\InAppBrowserDialog.class \
+G:\Phonegap\LoginRadiusPhoneGapDemo\platforms\android\ant-build\classes\org\apache\cordova\inappbrowser\InAppChromeClient.class \
+G:\Phonegap\LoginRadiusPhoneGapDemo\platforms\android\ant-build\dexedLibs\classes-a5bf9ca9e7cf3b380b0396b70ac591d1.jar \
