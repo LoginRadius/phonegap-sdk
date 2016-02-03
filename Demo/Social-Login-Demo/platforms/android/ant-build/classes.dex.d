@@ -1,0 +1,23 @@
+C:\wamp\www\CordovaPG\PGtest\platforms\android\ant-build\classes.dex : \
+C:\wamp\www\CordovaPG\PGtest\platforms\android\ant-build\classes\com\lrtestPG\PGtest\BuildConfig.class \
+C:\wamp\www\CordovaPG\PGtest\platforms\android\ant-build\classes\com\lrtestPG\PGtest\CordovaApp.class \
+C:\wamp\www\CordovaPG\PGtest\platforms\android\ant-build\classes\com\lrtestPG\PGtest\R$attr.class \
+C:\wamp\www\CordovaPG\PGtest\platforms\android\ant-build\classes\com\lrtestPG\PGtest\R$drawable.class \
+C:\wamp\www\CordovaPG\PGtest\platforms\android\ant-build\classes\com\lrtestPG\PGtest\R$string.class \
+C:\wamp\www\CordovaPG\PGtest\platforms\android\ant-build\classes\com\lrtestPG\PGtest\R$xml.class \
+C:\wamp\www\CordovaPG\PGtest\platforms\android\ant-build\classes\com\lrtestPG\PGtest\R.class \
+C:\wamp\www\CordovaPG\PGtest\platforms\android\ant-build\classes\org\apache\cordova\inappbrowser\InAppBrowser$1.class \
+C:\wamp\www\CordovaPG\PGtest\platforms\android\ant-build\classes\org\apache\cordova\inappbrowser\InAppBrowser$2.class \
+C:\wamp\www\CordovaPG\PGtest\platforms\android\ant-build\classes\org\apache\cordova\inappbrowser\InAppBrowser$3.class \
+C:\wamp\www\CordovaPG\PGtest\platforms\android\ant-build\classes\org\apache\cordova\inappbrowser\InAppBrowser$4$1.class \
+C:\wamp\www\CordovaPG\PGtest\platforms\android\ant-build\classes\org\apache\cordova\inappbrowser\InAppBrowser$4.class \
+C:\wamp\www\CordovaPG\PGtest\platforms\android\ant-build\classes\org\apache\cordova\inappbrowser\InAppBrowser$5$1.class \
+C:\wamp\www\CordovaPG\PGtest\platforms\android\ant-build\classes\org\apache\cordova\inappbrowser\InAppBrowser$5$2.class \
+C:\wamp\www\CordovaPG\PGtest\platforms\android\ant-build\classes\org\apache\cordova\inappbrowser\InAppBrowser$5$3.class \
+C:\wamp\www\CordovaPG\PGtest\platforms\android\ant-build\classes\org\apache\cordova\inappbrowser\InAppBrowser$5$4.class \
+C:\wamp\www\CordovaPG\PGtest\platforms\android\ant-build\classes\org\apache\cordova\inappbrowser\InAppBrowser$5.class \
+C:\wamp\www\CordovaPG\PGtest\platforms\android\ant-build\classes\org\apache\cordova\inappbrowser\InAppBrowser$InAppBrowserClient.class \
+C:\wamp\www\CordovaPG\PGtest\platforms\android\ant-build\classes\org\apache\cordova\inappbrowser\InAppBrowser.class \
+C:\wamp\www\CordovaPG\PGtest\platforms\android\ant-build\classes\org\apache\cordova\inappbrowser\InAppBrowserDialog.class \
+C:\wamp\www\CordovaPG\PGtest\platforms\android\ant-build\classes\org\apache\cordova\inappbrowser\InAppChromeClient.class \
+C:\wamp\www\CordovaPG\PGtest\platforms\android\ant-build\dexedLibs\classes-b73d16b735554e2f9a83a732b392605a.jar \
