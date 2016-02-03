@@ -164,10 +164,14 @@ var $LR = {
             win = window.open(_url, '_blank', 'width=450,height=500,toolbar=no');
 			win.addEventListener('loadstart', function(event){ })
             win.addEventListener('loadstop', function(event){
+			
+			
 			if ((event.url.indexOf("?token")) > 0) {
+
 				var k = event.url.indexOf("?token");
                 token = event.url.substring(k + 7, k + 43);
 				sessionStorage.setItem("LRTokenKey", token);
+				
 				win.close();
                 $LR.onLogin();
                 
@@ -280,7 +284,8 @@ var $LR = {
 		    provider = this.searchProviders(provider);
             if (provider){
 			var url = provider['Endpoint'];
-			url=url+"&mobile=1";
+			url=url+"&ismobile=1&is_access_token=1";
+
 			return url;
 			}
                 
