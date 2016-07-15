@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+     KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="format-detection" content="telephone=no" />
+        <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
+   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, target-densitydpi=medium-dpi, user-scalable=0" />
+        <link rel="stylesheet" type="text/css" href="css/index.css" />
+
+        <title>User Registration</title>
+        <style type="text/css">
+            .lr-sociallogincontent{ width: 100%; height:auto; float:left;padding: 32px 44px; border:1px solid #ccc;border-radius: 6px;-webkit-border-radius: 6px; -moz-border-radius: 6px;  }
+            .lr-sociallogincontent {
+     
+    text-align: center;
+    width: 65%;
+    height: auto;
+    margin-left: 15%;
+   /* margin: 0 auto;*/
+    padding: 32px 44px;
+    border: 2px solid #009ACD;
+    /* border-width: medium; */
+    border-radius: 6px;
+    -webkit-border-radius: 6px;
+  margin-bottom: 0.5cm;
+     
+      padding: 22px 7px;
+     
+  }
+  .lr-Sociallogintop {
+      width: 100%;
+      height: auto;
+      float: left;
+      font-size: 24px;
+      text-align: left;
+      color: #444;
+      font-family: Arial, Helvetica, sans-serif;
+  }
+  .sociallogin_interface {
+      width: 282px;
+      height: auto;
+      float: left;
+      margin-top: 20px;
+  }
+  .sociallogin_interface img {
+      margin-bottom: 5px;
+      margin-left: 3px;
+      width: 75px;
+      margin-right: 4px;
+  }
+  .sociallogin_userprofile {
+      display: none;
+      width: 100%
+  }
+            table {
+                font-family:Arial, Helvetica, sans-serif;
+                color:#666;
+                font-size:12px;
+                text-shadow: 1px 1px #fff;
+                background:#eaebec;
+                margin:20px;
+                border:#ccc solid;
+                width: 100%;
+
+            }
+            table tr {
+                text-align: center;
+                padding-left:20px;
+            }
+            table td:first-child {
+                text-align: left;
+                padding-left:20px;
+                border-left: 0;
+            }
+            table td {
+                padding:10px;
+                background: #fafafa;
+                background: -webkit-gradient(linear, left top, left bottom, from(#fbfbfb), to(#fafafa));
+                background: -moz-linear-gradient(top,  #fbfbfb,  #fafafa);
+            }
+            table tr.even td {
+                background: #f6f6f6;
+                background: -webkit-gradient(linear, left top, left bottom, from(#f8f8f8), to(#f6f6f6));
+                background: -moz-linear-gradient(top,  #f8f8f8,  #f6f6f6);
+            }
+            table tr:last-child td {
+                border-bottom:0;
+            }
+            table tr:hover td {
+                background: #f2f2f2;
+                background: -webkit-gradient(linear, left top, left bottom, from(#f2f2f2), to(#f0f0f0));
+                background: -moz-linear-gradient(top,  #f2f2f2,  #f0f0f0);
+            }
+        </style>
+    </head>
+	
+    <body onload="onLoad()">
+        <div class="app">
+            <h1>loginradius</h1>
+            <div id="deviceready" class="blink">
+                <p class="event listening">Connecting to Device</p>
+                <p class="event received">Device is Ready</p>
+			</div>
+        </div>
+        <script type="text/javascript" src="cordova.js"></script>
+        <script type="text/javascript" src="js/index.js"></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<!--Include scripts to handle User Registration and Data Retrieval-->
+<script src="js/LoginRadiusPhoneGapSDK.js"></script>
+<script src="js/LoginRadiusSDK.2.0.0.js"></script>
+
+
+<script type="text/javascript">
+            app.initialize();
+</script>
+<script type="text/javascript" charset="utf-8">
+
+        // Wait for device API libraries to load
+        function onLoad() {
+            document.addEventListener("deviceready", onDeviceReady, false);
+        }
+		
+        //Device APIs are available
+        function onDeviceReady() {
+            document.querySelector('.app').setAttribute('style', 'display:none;');
+			var options = {};
+
+            //Set our API Key
+            options.apikey = '<LoginRadius API Key>';
+			//Set Your LoginRadius account details
+			options.siteName = '<LoginRadius Site Name>';
+
+            options.promptPasswordOnSocialLogin='true';
+             options.V2RecaptchaSiteKey="";
+            //Toggle native, defaults to false
+            options.native = false;
+            options.nativepath="Profile.html";
+			//Initialize the function that will handle the responses from the hosted registration page.
+			options.callback=function (params){
+               //  alert("giriraj");
+				//Handle the actions for: sociallogin, login, registration, and forgotpassword
+				switch(params.action) {
+					//Social login returns an accesstoken which can be used to pull user details(Using HTML SDK) including ID and UID for server side calls. 
+					case "sociallogin":
+						sessionStorage.setItem('LRTokenKey', params.token);
+                         window.plugins.toast.showWithOptions({
+				                message: "Welcome in LoginRadius",
+				                duration: "3500", // 2000 ms
+				                position: "bottom",
+				                styling: {
+				                  opacity: 0.75, // 0.0 (transparent) to 1.0 (opaque). Default 0.8
+				                  backgroundColor: '#424242', // make sure you use #RRGGBB. Default #333333
+				                  textColor: '#ffffff', // Ditto. Default #FFFFFF
+				                  textSize: 17.5, // Default is approx. 13.
+				                  cornerRadius: 30, // minimum is 0 (square). iOS default 20, Android default 100
+				                  horizontalPadding: 10, // iOS default 16, Android default 50
+				                  verticalPadding: 16 // iOS default 12, Android default 30
+				                }
+				              });
+						window.location="Profile.html";
+						break;
+					//Login returns an accesstoken which can be used to pull user details(Using HTML SDK) including ID and UID for server side calls.	
+					case "login":
+						sessionStorage.setItem('LRTokenKey', params.token);
+						window.location="Profile.html";
+						break;
+					//Registration returns and email message and status which you can use to display messaging to your user. 
+					case "registration":
+						
+						var registermessage="An email has been sent to "+params.email+". Click on the verification link included in this email.";				
+						//$(".messageinfo").html(registermessage);
+                        window.plugins.toast.showWithOptions({
+				                message: registermessage,
+				                duration: "6000", // 2000 ms
+				                position: "center",
+				                styling: {
+				                  opacity: 1.0, // 0.0 (transparent) to 1.0 (opaque). Default 0.8
+				                  backgroundColor: '#424242', // make sure you use #RRGGBB. Default #333333
+				                  textColor: '#ffffff', // Ditto. Default #FFFFFF
+				                  textSize: 17.5, // Default is approx. 13.
+				                  cornerRadius: 30, // minimum is 0 (square). iOS default 20, Android default 100
+				                  horizontalPadding: 10, // iOS default 16, Android default 50
+				                  verticalPadding: 270 // iOS default 12, Android default 30
+				                }
+				              });
+						break;
+					//Forgot password returns and email message and status which you can use to display messaging to your user. 
+					case "forgotpassword":
+						var forgotmessage= "An email has been sent to "+params.email+". Click on the forgot password link included in this email.";
+						//$(".messageinfo").html(forgotmessage);
+                         window.plugins.toast.showWithOptions({
+				                message: forgotmessage,
+				                duration: "6000", // 2000 ms
+				                position: "center",
+				                styling: {
+				                  opacity: 1.0, // 0.0 (transparent) to 1.0 (opaque). Default 0.8
+				                  backgroundColor: '#424242', // make sure you use #RRGGBB. Default #333333
+				                  textColor: '#ffffff', // Ditto. Default #FFFFFF
+				                  textSize: 17.5, // Default is approx. 13.
+				                  cornerRadius: 30, // minimum is 0 (square). iOS default 20, Android default 100
+				                  horizontalPadding: 10, // iOS default 16, Android default 50
+				                  verticalPadding: 270 // iOS default 12, Android default 30
+				                }
+				              });
+						break;
+					default:
+						alert('action not defined');
+						break;
+					}
+				};
+			//Initialize the LoginRadius User Registration object
+             $LR.init(options);
+             
+			};		
+	
+</script>
+	<p style="text-align:center; margin-top: 1cm;" ><img src="img/loginradiuslogo.png"></p>
+    <!--Display message container -->
+    <div id="messageinfo" class="messageinfo" style="text-transform:none !important;  margin-top: 1cm;"></div>
+    <!--Open the Registration interface on click of this element -->
+    <div class="lr-sociallogincontent">
+        <a onclick="$LR.util.lrRegister();"> Register</a>
+    </div>
+    <!--Open the Login(social and email/password) interface on click of this element -->
+    <div class="lr-sociallogincontent">
+        <a onclick="$LR.util.lrLogin();">Login</a></br>
+    </div>
+    <!--Open the Social Login interface on click of this element -->
+    <div class="lr-sociallogincontent">
+        <a onclick="$LR.util.lrSocial();">Social Login</a></br>
+    </div>
+    <div class="lr-sociallogincontent">
+    <!--Open the Forgot password interface on click of this element -->
+        <a onclick="$LR.util.lrForgotPassword();">Forgot Password</a></br>
+	</div>
+    </body>
+</html>
