@@ -9,5 +9,6 @@ Released on **july 15,  2016**
   - Added new fields for hosted page PromptPasswordOnSocialLogin and Google Recaptcha .
   - Handled network connection error and failures.
   - Implement Facebook native login handled through hosted page.
+
 ##### Bug Fixes
  - Handled social ID provider Empty email address scenario. 
