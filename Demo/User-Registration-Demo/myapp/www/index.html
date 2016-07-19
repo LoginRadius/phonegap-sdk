@@ -156,27 +156,13 @@
             options.nativepath="Profile.html";
 			//Initialize the function that will handle the responses from the hosted registration page.
 			options.callback=function (params){
-               //  alert("giriraj");
+              
 				//Handle the actions for: sociallogin, login, registration, and forgotpassword
 				switch(params.action) {
 					//Social login returns an accesstoken which can be used to pull user details(Using HTML SDK) including ID and UID for server side calls. 
 					case "sociallogin":
 						sessionStorage.setItem('LRTokenKey', params.token);
-                         window.plugins.toast.showWithOptions({
-				                message: "Welcome in LoginRadius",
-				                duration: "3500", // 2000 ms
-				                position: "bottom",
-				                styling: {
-				                  opacity: 0.75, // 0.0 (transparent) to 1.0 (opaque). Default 0.8
-				                  backgroundColor: '#424242', // make sure you use #RRGGBB. Default #333333
-				                  textColor: '#ffffff', // Ditto. Default #FFFFFF
-				                  textSize: 17.5, // Default is approx. 13.
-				                  cornerRadius: 30, // minimum is 0 (square). iOS default 20, Android default 100
-				                  horizontalPadding: 10, // iOS default 16, Android default 50
-				                  verticalPadding: 16 // iOS default 12, Android default 30
-				                }
-				              });
-						window.location="Profile.html";
+                      	window.location="Profile.html";
 						break;
 					//Login returns an accesstoken which can be used to pull user details(Using HTML SDK) including ID and UID for server side calls.	
 					case "login":
@@ -188,39 +174,13 @@
 						
 						var registermessage="An email has been sent to "+params.email+". Click on the verification link included in this email.";				
 						//$(".messageinfo").html(registermessage);
-                        window.plugins.toast.showWithOptions({
-				                message: registermessage,
-				                duration: "6000", // 2000 ms
-				                position: "center",
-				                styling: {
-				                  opacity: 1.0, // 0.0 (transparent) to 1.0 (opaque). Default 0.8
-				                  backgroundColor: '#424242', // make sure you use #RRGGBB. Default #333333
-				                  textColor: '#ffffff', // Ditto. Default #FFFFFF
-				                  textSize: 17.5, // Default is approx. 13.
-				                  cornerRadius: 30, // minimum is 0 (square). iOS default 20, Android default 100
-				                  horizontalPadding: 10, // iOS default 16, Android default 50
-				                  verticalPadding: 270 // iOS default 12, Android default 30
-				                }
-				              });
+                       alert(registermessage);
 						break;
 					//Forgot password returns and email message and status which you can use to display messaging to your user. 
 					case "forgotpassword":
 						var forgotmessage= "An email has been sent to "+params.email+". Click on the forgot password link included in this email.";
 						//$(".messageinfo").html(forgotmessage);
-                         window.plugins.toast.showWithOptions({
-				                message: forgotmessage,
-				                duration: "6000", // 2000 ms
-				                position: "center",
-				                styling: {
-				                  opacity: 1.0, // 0.0 (transparent) to 1.0 (opaque). Default 0.8
-				                  backgroundColor: '#424242', // make sure you use #RRGGBB. Default #333333
-				                  textColor: '#ffffff', // Ditto. Default #FFFFFF
-				                  textSize: 17.5, // Default is approx. 13.
-				                  cornerRadius: 30, // minimum is 0 (square). iOS default 20, Android default 100
-				                  horizontalPadding: 10, // iOS default 16, Android default 50
-				                  verticalPadding: 270 // iOS default 12, Android default 30
-				                }
-				              });
+                        alert(forgotmessage);
 						break;
 					default:
 						alert('action not defined');
