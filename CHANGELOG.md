@@ -12,3 +12,17 @@ Released on **july 15,  2016**
 
 ##### Bug Fixes
  - Handled social ID provider Empty email address scenario. 
+ 
+ 
+ 
+
+### Version 2.0.1
+Released on **November 22,  2016**
+
+##### Enhancements
+
+  - Improved code performance.
+  - Added new Demo for SocialLogin.
+  - Sitename is no longer required in order to implement the SDK.
+
+ 

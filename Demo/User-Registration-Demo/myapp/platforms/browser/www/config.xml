@@ -6,11 +6,11 @@
     <feature name="Device">
         <param name="browser-package" value="Device" />
     </feature>
-    <name>loginradiusdemo</name>
+    <name>User-Registration-Demo</name>
     <description>
         Hello World sample application that responds to the deviceready event.
     </description>
-    <author email="giriraj@nyaconcepts.com" href="http://loginradius.com">
+    <author email="giriraj@loginradius.com" href="http://loginradius.com">
         PhoneGap Team
     </author>
     <content src="index.html" />

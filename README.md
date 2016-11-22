@@ -10,26 +10,27 @@ LoginRadius helps businesses boost user engagement on their web/mobile platform,
 
 Please visit [here](http://www.loginradius.com/) for more information.
 
-######Before using demo project,you must install PhoneGap environment in your system Please visit [here](http://docs.phonegap.com/getting-started/1-install-phonegap/desktop/) for complete PhoneGap installation.
+###### Before using demo project,you must install PhoneGap environment in your system Please visit [here](http://docs.phonegap.com/getting-started/1-install-phonegap/desktop/) for complete PhoneGap installation.
 
 #### There are two projects in the library:
-a. User-Registration-Demo - This is the demo application.    
+a. Demo
+   1)User-Registration-Demo
+   2)SocialLogin Demo
 b. PhoneGapSDK -This is the LoginRadius SDK
 
 ##### User-Registration-Demo
 1.Put the value according to your requirement in index.html
 
-####Index.html
+#### Index.html
 
 ```ruby
    options.apikey = '<LoginRadius API Key>';
-   options.siteName = '<LoginRadius Site Name>';
    options.promptPasswordOnSocialLogin='true';
    options.V2RecaptchaSiteKey="";
 ```
 
 2.Finally, setup elements to trigger the functions that will direct your users to the relevant hosted interface.
-```ruby
+```javascript
     <div class="lr-sociallogincontent">
         <a onclick="$LR.util.lrRegister();"> Register</a>
     </div>
@@ -46,4 +47,24 @@ b. PhoneGapSDK -This is the LoginRadius SDK
         <a onclick="$LR.util.lrForgotPassword();">Forgot Password</a></br>
 	</div>
     
-    ```
+```
+	
+	
+#### SocialLogin-Demo
+1.Put the value according to your requirement in index.html
+
+#### Index.html
+
+```ruby
+  options.apikey = '<LoginRadius API Key>';
+  options.native = false;
+  $LR.init(options);
+```
+
+2.Finally, setup elements to trigger the functions that will direct your users to the relevant provider interface.
+```ruby
+  <a href="#" onclick="$LR.login('Facebook');"><img src="img/Facebook.png"></a>
+  <a href="#" onclick="$LR.login('Twitter');"><img src="img/Twitter.png"></a>
+  <a href="#" onclick="$LR.login('Google');"><img src="img/Google.png"></a>
+    
+```

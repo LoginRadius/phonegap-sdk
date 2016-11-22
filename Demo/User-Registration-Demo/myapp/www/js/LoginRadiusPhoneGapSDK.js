@@ -20,358 +20,366 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
- */
-
+*/
 //The General LR Object.
-var win; // win use for open hosted page window and load page url
-var params = {};  // params use for storing values like token,action and uid
+var win;
+var params = {};
 var $LR = {
-	FB_native_permissions : {
-		USER_BASIC_INFO : "public_profile",
+    FB_native_permissions: {
+        USER_BASIC_INFO: "public_profile",
 
-		/* Basic User Data permissions */
-		USER_ABOUT : "user_about_me",
-		USER_BOOKS : "user_actions.books",
-		USER_FITNESS : "user_actions.fitness",
-		USER_MUSIC : "user_actions.music",
-		USER_NEWS : "user_actions.news",
-		USER_VIDEO : "user_actions.video",
-		USER_ACTIVITIES : "user_activities",
-		USER_BIRTHDAY : "user_birthday",
-		USER_EDUCATION : "user_education_history",
-		USER_EVENTS : "user_events",
-		USER_FRIEND_USING_APP : "user_friends",
-		USER_GAMES_ACTIVITY : "user_games_activity",
-		USER_GROUPS : "user_groups",
-		USER_HOMETOWN : "user_hometown",
-		USER_INTERESTS : "user_interests",
-		USER_LIKES : "user_likes",
-		USER_LOCATION : "user_location",
-		USER_PHOTOS : "user_photos",
-		USER_RELATIONSHIPS : "user_relationships",
-		USER_RELATIONSHIP_PREF : "user_relationship_details",
-		USER_RELIGION_POLITICS : "user_religion_politics",
-		USER_STATUS : "user_status",
-		USER_TAGGED_PLACES : "user_tagged_places",
-		USER_VIDEOS : "user_videos",
-		USER_WEBSITE : "user_website",
-		USER_WORK_HISTORY : "user_work_history",
+        /* Basic User Data permissions */
+        USER_ABOUT: "user_about_me",
+        USER_BOOKS: "user_actions.books",
+        USER_FITNESS: "user_actions.fitness",
+        USER_MUSIC: "user_actions.music",
+        USER_NEWS: "user_actions.news",
+        USER_VIDEO: "user_actions.video",
+        USER_ACTIVITIES: "user_activities",
+        USER_BIRTHDAY: "user_birthday",
+        USER_EDUCATION: "user_education_history",
+        USER_EVENTS: "user_events",
+        USER_FRIEND_USING_APP: "user_friends",
+        USER_GAMES_ACTIVITY: "user_games_activity",
+        USER_GROUPS: "user_groups",
+        USER_HOMETOWN: "user_hometown",
+        USER_INTERESTS: "user_interests",
+        USER_LIKES: "user_likes",
+        USER_LOCATION: "user_location",
+        USER_PHOTOS: "user_photos",
+        USER_RELATIONSHIPS: "user_relationships",
+        USER_RELATIONSHIP_PREF: "user_relationship_details",
+        USER_RELIGION_POLITICS: "user_religion_politics",
+        USER_STATUS: "user_status",
+        USER_TAGGED_PLACES: "user_tagged_places",
+        USER_VIDEOS: "user_videos",
+        USER_WEBSITE: "user_website",
+        USER_WORK_HISTORY: "user_work_history",
 
-		/* Extended Permissions */
-		USER_EMAIL : "email",
-		INSIGHTS : "read_insights",
-		MAILBOX : "read_mailbox",
-		STREAM : "read_stream",
-		PAGE_MAILBOX : "read_page_mailboxes",
-		FRIENDS : "read_friendlists",
-		ADS_MANAGEMENT : "ads_management",
-		ADS_READ : "ads_read",
-		MANAGE_NOTIFICATIONS : "manage_notifications",
-		PUBLISH_ACTIONS : "publish_actions",
-		MANAGE_PAGES : "manage_pages",
-		RSVP_EVENTS : "rsvp_events"
-	},
+        /* Extended Permissions */
+        USER_EMAIL: "email",
+        INSIGHTS: "read_insights",
+        MAILBOX: "read_mailbox",
+        STREAM: "read_stream",
+        PAGE_MAILBOX: "read_page_mailboxes",
+        FRIENDS: "read_friendlists",
+        ADS_MANAGEMENT: "ads_management",
+        ADS_READ: "ads_read",
+        MANAGE_NOTIFICATIONS: "manage_notifications",
+        PUBLISH_ACTIONS: "publish_actions",
+        MANAGE_PAGES: "manage_pages",
+        RSVP_EVENTS: "rsvp_events"
+    },
+    //An array of providers that are valid.
+    providers: [],
 
-	//Options array for configuration settings
-	options : {
-		permissions : [ "public_profile" ]
-	},
+    //URL pattern
+    URL: 'https://{APP_NAME}.hub.loginradius.com/requesthandlor.aspx?apikey={API_KEY}&provider=' +
+        '{PROVIDER}&callback=http://{APP_NAME}.hub.loginradius.com/is_access_token=true&scope=lr_basic',
+    //Options array for configuration settings
+    options: {
+        permissions: ["public_profile"]
+    },
 
-	//Api Domain where all LoginRadius calls go.
-	APIDomain : "https://api.loginradius.com",
-	//Domain that Hosted User Registration is located on. 
-	HostedDomain : "https://cdn.loginradius.com/hub/prod/Theme/mobile-v2/index.html",
-	//Access tokens for native login are passed to the backend for parsing
-	accessTokenPass : {
-		'FACEBOOK' : '/api/v2/access_token/facebook?key={API_KEY}&fb_access_token={ACCESS_TOKEN}',
-		'GOOGLE' : '/api/v2/access_token/google?key={API_KEY}&google_access_token={ACCESS_TOKEN}'
-	},
+    //Api Domain where all LoginRadius calls go.
+    APIDomain: "https://api.loginradius.com",
+    //Domain that Hosted User Registration is located on.
+    HostedDomain: "https://cdn.loginradius.com/hub/prod/Theme/mobile-v2/index.html",
+    //Access tokens for native login are passed to the backend for parsing
+    accessTokenPass: {
+        'FACEBOOK': '/api/v2/access_token/facebook?key={API_KEY}&fb_access_token={ACCESS_TOKEN}',
+        'GOOGLE': '/api/v2/access_token/google?key={API_KEY}&google_access_token={ACCESS_TOKEN}'
+    },
 
-	//Bindable call for when we receive the token.
-	onLogin : {},
+    //Bindable call for when we receive the token.
+    onLogin: {},
 
-	//Bindable call after fetching the provider list.
-	providerCallback : function() {
-	},
+    //Bindable call after fetching the provider list.
+    providerCallback: function() {},
 
-	//Instead of renderInterface, just init. Short, simple, sweet.
-	init : function(options) {
+    //Instead of renderInterface, just init. Short, simple, sweet.
+    init: function(options) {
 
-		if (!options.permissions)
-			options.permissions = this.options.permissions;
-		this.options = options;
+        $LR.util.jsonpCall("https://api.loginradius.com/api/v2/app/jsinterface?apikey=" + options.apikey, function handler(data) {
+            $LR.providers = data['Providers'];
+            $LR.providerCallback();
+        });
 
-	},
+        if (!options.permissions)
+            options.permissions = this.options.permissions;
+        this.options = options;
+    },
 
-	//Public function for logging in via a native providers string name.
-	login : function() {
-      var ref = cordova.InAppBrowser.open('http://', '_blank', 'location=no');   //open new  inappbrowser window for native login background 
-		var nativefbprovider = sessionStorage.getItem("providername");
+    //Public function for logging in via a provider string name.
+    login: function(provider) {
+        if (this.options.native && provider.toUpperCase() == "FACEBOOK") {
+            try {
+                facebookConnectPlugin.login($LR.options.permissions, this.util.nativeCallbackFacebookSuccess,
+                    this.util.nativeCallbackFacebookFail);
+            } catch (e) {
+                alert(e);
+            }
+        } else if (this.options.native && provider.toUpperCase() == "GOOGLE") {
+            try {
+                GoogleLogin.login(this.util.nativeCallbackGoogleSuccess, this.util.nativeCallbackGoogleFailure, []);
+            } catch (e) {
+                alert(e);
+            }
+        } else {
 
-		if ($LR.options.native && nativefbprovider == "facebook") {
-			try {
-				facebookConnectPlugin.login($LR.options.permissions,
-						this.util.nativeCallbackFacebookSuccess,
-						this.util.nativeCallbackFacebookFail);
-			} catch (e) {
-				alert(e);
-			}
-		} else if (this.options.native && provider.toUpperCase() == "GOOGLE") {
-			try {
-				GoogleLogin.login(this.util.nativeCallbackGoogleSuccess,
-						this.util.nativeCallbackGoogleFailure, []);
-			} catch (e) {
-				alert(e);
-			}
-		} else {
+            var url = $LR.util.getProviderUrl(provider);
+            console.log(url);
+            $LR.util.openWindow(url);
 
-			var url = $LR.util.getProviderUrl(provider);
-			console.log(url);
-			$LR.util.openWindow(url);
 
-		}
+            //  alert(usr);
 
-	},
+        }
 
-	logout : function() {
-		if (this.options.native) {
-			try {
-				facebookConnectPlugin.logout(
-						this.util.nativeLogoutFacebookSuccess,
-						this.util.nativeLogoutFacebookFailure);
-			} catch (e) {
-				alert(e)
-			}
-		} else {
-			sessionStorage.removeItem('LRTokenKey');
-		}
-	},
+    },
 
-	util : {
+    logout: function() {
+        if (this.options.native) {
+            try {
+                facebookConnectPlugin.logout(this.util.nativeLogoutFacebookSuccess,
+                    this.util.nativeLogoutFacebookFailure);
+            } catch (e) {
+                alert(e)
+            }
+        } else {
+            sessionStorage.removeItem('LRTokenKey');
+        }
+    },
 
-		//	  openWindowUserRegistration fun for calling hosted page url
-		openWindowUserRegistration : function(_url, callback) {
+    util: {
+        openWindow: function(_url) {
 
-			var email; // getting email for registration and forgot password
-			var status; // getting status for registration and forgot password
-			var token; // getting token for call api and getting userprofile
-			var lrUid; //getting uid for login
+            if (!_url)
+                return false;
 
-			if (!_url)
-				return false;
-			win = window.open(_url, '_blank', 'location=yes');
-			win.addEventListener('loadstop',
-					function(event) {
+            win = window.open(_url, '_blank', 'width=450,height=500,toolbar=no');
+            win.addEventListener('loadstart', function(event) {})
+            win.addEventListener('loadstop', function(event) {
 
-						var getParamValue = function(param) {
-							var regex = new RegExp("[\\?&]" + param
-									+ "=([^&#]*)"), results = regex
-									.exec(event.url);
-							return results === null ? ""
-									: decodeURIComponent(results[1].replace(
-											/\+/g, " "));
-						};
 
-						var provider = getParamValue("provider");
-						if (provider != null) {
-							switch (provider) {
-							case "facebook":
-								sessionStorage.setItem("providername",
-										"facebook");
+                if ((event.url.indexOf("?token")) > 0) {
+                    var k = event.url.indexOf("?token");
+                    token = event.url.substring(k + 7, k + 43);
+                    sessionStorage.setItem("LRTokenKey", token);
 
-								break;
-							default:
-								break;
-							}
-						}
+                    win.close();
+                    $LR.onLogin();
 
-						var providers = sessionStorage.getItem("providername");
-						if (providers == "facebook" && $LR.options.native) {
-							$LR.login();
+                }
+            });
+        },
 
-						} else {
-							var redirect = getParamValue("redirect");
-							if (redirect != "") {
-								var action = getParamValue("action");
-								if (action != "") {
-									switch (action) {
+        openWindowUserRegistration: function(_url, callback) {
+            if (!_url) return false;
+            win = window.open(_url, '_blank', 'location=yes');
+            win.addEventListener('loadstop', function(event) {
+                var getParamValue = function(param) {
+                    var regex = new RegExp("[\\?&]" + param + "=([^&#]*)"),
+                        results = regex.exec(event.url);
+                    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+                };
 
-									case "registration":
+                var redirect = getParamValue("redirect");
+                if (redirect != "") {
+                    var action = getParamValue("action");
+                    if (action != "") {
+                        switch (action) {
 
-										email = getParamValue("email");
-										status = getParamValue("status");
-										params.email = email;
-										params.status = status;
-										params.action = action;
-										break;
+                            case "registration":
 
-									case "login":
+                                var email = getParamValue("email");
+                                var status = getParamValue("status");
+                                params.email = email;
+                                params.status = status;
+                                params.action = action;
+                                break;
 
-										token = getParamValue("lrtoken");
-										lrUid = getParamValue("lraccountid");
-										params.action = action;
-										params.token = token;
-										params.lrUid = lrUid;
-										break;
+                            case "login":
 
-									case "forgotpassword":
+                                var token = getParamValue("lrtoken");
+                                var lrUid = getParamValue("lraccountid");
+                                params.action = action;
+                                params.token = token;
+                                params.lrUid = lrUid;
+                                break;
 
-										status = getParamValue("status");
-										email = getParamValue("email");
-										params.status = status;
-										params.email = email;
-										params.action = action;
-										break;
+                            case 'forgotpassword':
 
-									case "sociallogin":
-										token = getParamValue("lrtoken");
-										params.token = token;
-										params.action = action;
-										break;
+                                var status = getParamValue("status");
+                                var email = getParamValue("email");
+                                params.status = status;
+                                params.email = email;
+                                params.action = action;
+                                break;
 
-									default:
-										alert('action not defined');
-										break;
-									}
-								}
-								win.close();
-							}
-							;
-						}
-					});
-			win.addEventListener('exit', function(event) {
+                            case 'sociallogin':
+                                var token = getParamValue("lrtoken");
+                                params.token = token;
+                                params.action = action;
+                                break;
 
-				callback(params);
-			});
-		},
+                            default:
+                                alert('action not defined');
+                                break;
+                        }
+                    }
+                    win.close();
+                };
+            });
+            win.addEventListener('exit', function(event) {
 
-		addJs : function(url, context) {
-			context = context || document;
-			var head = context.getElementsByTagName('head')[0];
-			var js = context.createElement('script');
-			js.src = url;
-			js.type = "text/javascript";
-			head.appendChild(js);
+                callback(params);
+            });
+        },
 
-			return js;
-		},
+        addJs: function(url, context) {
+            context = context || document;
+            var head = context.getElementsByTagName('head')[0];
+            var js = context.createElement('script');
+            js.src = url;
+            js.type = "text/javascript";
+            head.appendChild(js);
 
-		jsonpCall : function(url, handle) {
-			var func = 'Loginradius'
-					+ Math.floor((Math.random() * 1000000000000000000) + 1);
-			window[func] = function(data) {
-				handle(data);
+            return js;
+        },
 
-				window[func] = undefined;
-				try {
-					delete window[func];
-				} catch (e) {
-				}
+        jsonpCall: function(url, handle) {
+            var func = 'Loginradius' + Math.floor((Math.random() * 1000000000000000000) + 1);
+            window[func] = function(data) {
+                handle(data);
 
-				document.getElementsByTagName('head')[0].removeChild(js);
-			};
+                window[func] = undefined;
+                try {
+                    delete window[func];
+                } catch (e) {}
 
-			var endurl = url.indexOf('?') != -1 ? url + '&callback=' + func
-					: url + '?callback=' + func;
-			var js = this.addJs(endurl);
-		},
+                document.getElementsByTagName('head')[0].removeChild(js);
+            };
 
-		searchProviders : function(provider) {
-			for (var i = 0; i < $LR.providers.length; i++) {
-				if ($LR.providers[i]['Name'].toLowerCase() == provider
-						.toLowerCase())
-					return $LR.providers[i];
-			}
-			return null;
-		},
+            var endurl = url.indexOf('?') != -1 ? url + '&callback=' + func : url + '?callback=' + func;
+            var js = this.addJs(endurl);
+        },
 
-		getProviderUrl : function(provider) {
-			provider = this.searchProviders(provider);
-			if (provider) {
-				var url = provider['Endpoint'];
-				url = url + "&ismobile=1&is_access_token=1";
+        searchProviders: function(provider) {
+            for (var i = 0; i < $LR.providers.length; i++) {
+                if ($LR.providers[i]['Name'].toLowerCase() == provider.toLowerCase())
+                    return $LR.providers[i];
+            }
+            return null;
+        },
 
-				return url;
-			}
+        getProviderUrl: function(provider) {
+            provider = this.searchProviders(provider);
+            if (provider) {
+                var url = provider['Endpoint'];
+                url = url + "&ismobile=1&is_access_token=1";
+                return url;
+            }
 
-		},
+        },
 
-		nativeCallbackGoogleSuccess : function(userData) {                  // this fun use for  token exchange with loginradius
+        nativeCallbackGoogleSuccess: function(userData) {
 
-			var url = $LR.APIDomain + $LR.accessTokenPass['GOOGLE'];
-			url = url.replace("{API_KEY}", $LR.options.apikey).replace(
-					"{ACCESS_TOKEN}", userData);
-			$LR.util.jsonpCall(url, $LR.util.LoginRadiusNativeCallback);
+            var url = $LR.APIDomain + $LR.accessTokenPass['GOOGLE'];
+            url = url.replace("{API_KEY}", $LR.options.apikey).replace("{ACCESS_TOKEN}", userData);
+            $LR.util.jsonpCall(url, $LR.util.LoginRadiusNativeCallback);
 
-		},
-		nativeCallbackFacebookSuccess : function(userData) {                // this fun use for  token exchange with loginradius
 
-			var url = $LR.APIDomain + $LR.accessTokenPass['FACEBOOK'];
-			url = url.replace("{API_KEY}", $LR.options.apikey).replace(
-					"{ACCESS_TOKEN}", userData['authResponse']['accessToken']);
-			$LR.util.jsonpCall(url, $LR.util.LoginRadiusNativeCallback);
-		},
+        },
+        nativeCallbackFacebookSuccess: function(userData) {
 
-		nativeCallbackFacebookFail : function(res) {
-			console.log(res);
-		},
+            var url = $LR.APIDomain + $LR.accessTokenPass['FACEBOOK'];
+            url = url.replace("{API_KEY}", $LR.options.apikey).replace("{ACCESS_TOKEN}", userData['authResponse']['accessToken']);
+            $LR.util.jsonpCall(url, $LR.util.LoginRadiusNativeCallback);
+        },
 
-		LoginRadiusNativeCallback : function(callback) {                     //getting token and call "sociallogin" action
-			sessionStorage.setItem("LRTokenKey", callback['access_token']);
-			var actionfb = ("sociallogin");
-			var lrfbtoken = sessionStorage.getItem("LRTokenKey");
-			sessionStorage.removeItem("providername");
-			window.location = $LR.options.nativepath;
-			win.close();
-			
-		},
+        nativeCallbackFacebookFail: function(res) {
+            console.log(res);
+        },
 
-		nativeLogoutFacebookSuccess : function(response) {
-			sessionStorage.removeItem('LRTokenKey');
-		},
+        LoginRadiusNativeCallback: function(callback) {
+            sessionStorage.setItem("LRTokenKey", callback['access_token']);
+            $LR.onLogin();
+        },
 
-		nativeLogoutFacebookFailure : function(response) {
-			console.log('error');
-		},
+        nativeLogoutFacebookSuccess: function(response) {
+            sessionStorage.removeItem('LRTokenKey');
+        },
 
-		lrRegister : function() {
-			var CallbackFun = $LR.options.callback;
-			var url = $LR.HostedDomain + "?apikey=" + $LR.options.apikey
-					+ "&sitename=" + $LR.options.siteName
-					+ "&promptPasswordOnSocialLogin="
-					+ $LR.options.promptPasswordOnSocialLogin
-					+ "&V2RecaptchaSiteKey=" + $LR.options.V2RecaptchaSiteKey
-					+ "&action=registration";
-			$LR.util.openWindowUserRegistration(url, CallbackFun);
+        nativeLogoutFacebookFailure: function(response) {
+            console.log('error');
+        },
 
-		},
-		lrSocial : function() {
-			var CallbackFun = $LR.options.callback;
-			var url = $LR.HostedDomain + "?apikey=" + $LR.options.apikey
-					+ "&sitename=" + $LR.options.siteName
-					+ "&promptPasswordOnSocialLogin="
-					+ $LR.options.promptPasswordOnSocialLogin
-					+ "&V2RecaptchaSiteKey=" + $LR.options.V2RecaptchaSiteKey
-					+ "&action=social";
-			$LR.util.openWindowUserRegistration(url, CallbackFun);
-		},
-		lrForgotPassword : function() {
-			var CallbackFun = $LR.options.callback;
-			var url = $LR.HostedDomain + "?apikey=" + $LR.options.apikey
-					+ "&sitename=" + $LR.options.siteName
-					+ "&action=forgotpassword";
-			$LR.util.openWindowUserRegistration(url, CallbackFun);
-		},
-		lrLogin : function() {
-			var CallbackFun = $LR.options.callback;
-			var url = $LR.HostedDomain + "?apikey=" + $LR.options.apikey
-					+ "&sitename=" + $LR.options.siteName
-					+ "&promptPasswordOnSocialLogin="
-					+ $LR.options.promptPasswordOnSocialLogin
-					+ "&V2RecaptchaSiteKey=" + $LR.options.V2RecaptchaSiteKey
-					+ "&action=login";
-			$LR.util.openWindowUserRegistration(url, CallbackFun);
+        lrRegister: function() {
+            var CallbackFun = $LR.options.callback;
+            $LR.init($LR.options);
+            for (var prov in $LR.providers) {
+                var url = $LR.util.getProviderUrl($LR.providers[prov].Name);
+                var domain = url.split('/')[2];
+                domain = domain.split(':')[0];
+                domain = domain.split('.')[0];
+            }
+            var url = $LR.HostedDomain + "?apikey=" + $LR.options.apikey +
+                "&sitename=" + domain +
+                "&promptPasswordOnSocialLogin=" +
+                $LR.options.promptPasswordOnSocialLogin +
+                "&V2RecaptchaSiteKey=" + $LR.options.V2RecaptchaSiteKey +
+                "&action=registration";
+            $LR.util.openWindowUserRegistration(url, CallbackFun);
 
-		}
-	}
+        },
+        lrSocial: function() {
+            var CallbackFun = $LR.options.callback;
+            $LR.init($LR.options);
+            for (var prov in $LR.providers) {
+                var url = $LR.util.getProviderUrl($LR.providers[prov].Name);
+                var domain = url.split('/')[2];
+                domain = domain.split(':')[0];
+                domain = domain.split('.')[0];
+            }
+            var url = $LR.HostedDomain + "?apikey=" + $LR.options.apikey +
+                "&sitename=" + domain +
+                "&promptPasswordOnSocialLogin=" +
+                $LR.options.promptPasswordOnSocialLogin +
+                "&V2RecaptchaSiteKey=" + $LR.options.V2RecaptchaSiteKey +
+                "&action=social";
+            $LR.util.openWindowUserRegistration(url, CallbackFun);
+        },
+        lrForgotPassword: function() {
+            var CallbackFun = $LR.options.callback;
+            $LR.init($LR.options);
+            for (var prov in $LR.providers) {
+                var url = $LR.util.getProviderUrl($LR.providers[prov].Name);
+                var domain = url.split('/')[2];
+                domain = domain.split(':')[0];
+                domain = domain.split('.')[0];
+            }
+            var url = $LR.HostedDomain + "?apikey=" + $LR.options.apikey +
+                "&sitename=" + domain +
+                "&action=forgotpassword";
+            $LR.util.openWindowUserRegistration(url, CallbackFun);
+        },
+        lrLogin: function() {
+            var CallbackFun = $LR.options.callback;
+            $LR.init($LR.options);
+            for (var prov in $LR.providers) {
+                var url = $LR.util.getProviderUrl($LR.providers[prov].Name);
+                var domain = url.split('/')[2];
+                domain = domain.split(':')[0];
+                domain = domain.split('.')[0];
+            }
+            var url = $LR.HostedDomain + "?apikey=" + $LR.options.apikey +
+                "&sitename=" + domain +
+                "&promptPasswordOnSocialLogin=" +
+                $LR.options.promptPasswordOnSocialLogin +
+                "&V2RecaptchaSiteKey=" + $LR.options.V2RecaptchaSiteKey +
+                "&action=login";
+            $LR.util.openWindowUserRegistration(url, CallbackFun);
+        }
+    }
 };

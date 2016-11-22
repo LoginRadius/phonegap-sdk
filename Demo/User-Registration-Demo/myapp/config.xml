@@ -1,10 +1,10 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget id="com.loginradius.myapp" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0">
-    <name>loginradiusdemo</name>
+    <name>User-Registration-Demo</name>
     <description>
         Hello World sample application that responds to the deviceready event.
     </description>
-    <author email="giriraj@nyaconcepts.com" href="http://loginradius.com">
+    <author email="giriraj@loginradius.com" href="http://loginradius.com">
         PhoneGap Team
     </author>
     <content src="index.html" />
@@ -30,7 +30,7 @@
     <plugin name="cordova-plugin-statusbar" source="npm" spec="~2.1.2" />
     <plugin name="cordova-plugin-vibration" source="npm" spec="~2.1.0" />
     <plugin name="cordova-plugin-whitelist" source="npm" spec="~1.2.1" />
-     <plugin name="cordova-plugin-x-toast"/>
+    <plugin name="cordova-plugin-x-toast" />
     <icon src="icon.png" />
     <platform name="android">
         <icon density="ldpi" src="www/res/icon/android/drawable-ldpi-icon.png" />
