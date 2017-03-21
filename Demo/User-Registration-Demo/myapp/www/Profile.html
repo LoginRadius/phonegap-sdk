@@ -98,10 +98,11 @@
                 </tr>
             </table>
         </div>
-
+       <script type="text/javascript" src="cordova.js"></script>
+       <script type="text/javascript" src="js/index.js"></script>
         <!-- Scripts for LoginRadius. We need the HTML 5 SDK and the PhoneGap SDK -->
         <script src="js/LoginRadiusSDK.2.0.0.js"></script>
-
+       <script src="js/LoginRadiusPhoneGapSDK.js"></script>
 
         
         <!-- Custom Scripts -->
@@ -109,6 +110,7 @@
 
         //Logout cleanup
         function Logout(){
+
 			sessionStorage.removeItem('LRTokenKey');
             window.location="index.html";
         }

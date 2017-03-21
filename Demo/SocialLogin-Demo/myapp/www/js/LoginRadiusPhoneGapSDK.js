@@ -80,7 +80,7 @@ var $LR = {
     options: {
         permissions: ["public_profile"]
     },
-
+     GoogleScope:"https://www.googleapis.com/auth/plus.login https://www.googleapis.com/auth/userinfo.email",
     //Api Domain where all LoginRadius calls go.
     APIDomain: "https://api.loginradius.com",
     //Domain that Hosted User Registration is located on.
@@ -88,7 +88,7 @@ var $LR = {
     //Access tokens for native login are passed to the backend for parsing
     accessTokenPass: {
         'FACEBOOK': '/api/v2/access_token/facebook?key={API_KEY}&fb_access_token={ACCESS_TOKEN}',
-        'GOOGLE': '/api/v2/access_token/google?key={API_KEY}&google_access_token={ACCESS_TOKEN}'
+        'GOOGLE': '/api/v2/access_token/googlejwt?key={API_KEY}&id_token={ACCESS_TOKEN}'
     },
 
     //Bindable call for when we receive the token.
@@ -112,131 +112,187 @@ var $LR = {
 
     //Public function for logging in via a provider string name.
     login: function(provider) {
-        if (this.options.native && provider.toUpperCase() == "FACEBOOK") {
+         var ref = cordova.InAppBrowser.open('http://', '_blank', 'location=no');   //open new  inappbrowser window for native login background 
+        var nativefbprovider = sessionStorage.getItem("providername");
+
+        if ($LR.options.facebooknative && nativefbprovider == "facebook") {
             try {
-                facebookConnectPlugin.login($LR.options.permissions, this.util.nativeCallbackFacebookSuccess,
-                    this.util.nativeCallbackFacebookFail);
+                facebookConnectPlugin.login($LR.options.permissions,
+                        this.util.nativeCallbackFacebookSuccess,
+                        this.util.nativeCallbackFacebookFail);
             } catch (e) {
                 alert(e);
+                 sessionStorage.removeItem("providername");
             }
-        } else if (this.options.native && provider.toUpperCase() == "GOOGLE") {
-            try {
-                GoogleLogin.login(this.util.nativeCallbackGoogleSuccess, this.util.nativeCallbackGoogleFailure, []);
-            } catch (e) {
-                alert(e);
-            }
-        } else {
+        } else if (this.options.googlenative && nativefbprovider == "google") {
+               var webClientId="";
 
-            var url = $LR.util.getProviderUrl(provider);
-            console.log(url);
-            $LR.util.openWindow(url);
+               if($LR.options.googlewebid!=null ||$LR.options.googlewebid!=""){
+               webClientId=$LR.options.googlewebid;
+               }
+               window.plugins.googleplus.login({
+               'webClientId': webClientId, // optional clientId of your Web application from Credentials settings of your project - On Android, this MUST be included to get an idToken. On iOS, it is not required.
+               'scope': $LR.GoogleScope
+           },
+      function (user_data) {
+        // For the purpose of this example I will store user data on local storage
+        $LR.util.nativeCallbackGoogleSuccess(user_data);
 
+      },function (msg) {
+      alert('error: ' + msg);
+       sessionStorage.removeItem("providername");
+    });
+} else {
 
-            //  alert(usr);
+           var url = $LR.util.getProviderUrl(provider);
+                      console.log(url);
+                      $LR.util.openWindow(url);
 
-        }
-
-    },
+  }},
 
     logout: function() {
-        if (this.options.native) {
+
             try {
-                facebookConnectPlugin.logout(this.util.nativeLogoutFacebookSuccess,
-                    this.util.nativeLogoutFacebookFailure);
+              sessionStorage.removeItem('LRTokenKey');
+              if(facebookConnectPlugin.getLoginStatus){
+               facebookConnectPlugin.logout(this.util.nativeLogoutFacebookSuccess,this.util.nativeLogoutFacebookFailure);
+              }
+
+                window.plugins.googleplus.logout(
+                    function (msg) {
+                      alert(msg); // do something useful instead of alerting
+
+                    }
+                );
+
             } catch (e) {
                 alert(e)
             }
-        } else {
-            sessionStorage.removeItem('LRTokenKey');
-        }
+
     },
 
     util: {
-        openWindow: function(_url) {
+
+     openWindow: function(_url) {
+
+                if (!_url)
+                    return false;
+
+                win = window.open(_url, '_blank', 'width=450,height=500,toolbar=no');
+                win.addEventListener('loadstart', function(event) {})
+                win.addEventListener('loadstop', function(event) {
+
+
+                    if ((event.url.indexOf("?token")) > 0) {
+                        var k = event.url.indexOf("?token");
+                        token = event.url.substring(k + 7, k + 43);
+                        sessionStorage.setItem("LRTokenKey", token);
+
+                        win.close();
+                        $LR.onLogin();
+
+                    }
+                });
+            },
+       
+
+      openWindowUserRegistration : function(_url, callback) {
+
+            var email; // getting email for registration and forgot password
+            var status; // getting status for registration and forgot password
+            var token; // getting token for call api and getting userprofile
+            var lrUid; //getting uid for login
 
             if (!_url)
                 return false;
+            win = window.open(_url, '_blank', 'location=no');
+            win.addEventListener('loadstop',
+                    function(event) {
 
-            win = window.open(_url, '_blank', 'width=450,height=500,toolbar=no');
-            win.addEventListener('loadstart', function(event) {})
-            win.addEventListener('loadstop', function(event) {
+                        var getParamValue = function(param) {
+                            var regex = new RegExp("[\\?&]" + param
+                                    + "=([^&#]*)"), results = regex
+                                    .exec(event.url);
+                            return results === null ? ""
+                                    : decodeURIComponent(results[1].replace(
+                                            /\+/g, " "));
+                        };
 
-
-                if ((event.url.indexOf("?token")) > 0) {
-                    var k = event.url.indexOf("?token");
-                    token = event.url.substring(k + 7, k + 43);
-                    sessionStorage.setItem("LRTokenKey", token);
-
-                    win.close();
-                    $LR.onLogin();
-
-                }
-            });
-        },
-
-        openWindowUserRegistration: function(_url, callback) {
-            if (!_url) return false;
-            win = window.open(_url, '_blank', 'location=yes');
-            win.addEventListener('loadstop', function(event) {
-                var getParamValue = function(param) {
-                    var regex = new RegExp("[\\?&]" + param + "=([^&#]*)"),
-                        results = regex.exec(event.url);
-                    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
-                };
-
-                var redirect = getParamValue("redirect");
-                if (redirect != "") {
-                    var action = getParamValue("action");
-                    if (action != "") {
-                        switch (action) {
-
-                            case "registration":
-
-                                var email = getParamValue("email");
-                                var status = getParamValue("status");
-                                params.email = email;
-                                params.status = status;
-                                params.action = action;
-                                break;
-
-                            case "login":
-
-                                var token = getParamValue("lrtoken");
-                                var lrUid = getParamValue("lraccountid");
-                                params.action = action;
-                                params.token = token;
-                                params.lrUid = lrUid;
-                                break;
-
-                            case 'forgotpassword':
-
-                                var status = getParamValue("status");
-                                var email = getParamValue("email");
-                                params.status = status;
-                                params.email = email;
-                                params.action = action;
-                                break;
-
-                            case 'sociallogin':
-                                var token = getParamValue("lrtoken");
-                                params.token = token;
-                                params.action = action;
-                                break;
-
+                        var provider = getParamValue("provider");
+                        if (provider != null) {
+                            switch (provider) {
+                            case "facebook":
+                            sessionStorage.setItem("providername", "facebook");
+                            break;
+                             case "google":
+                             sessionStorage.setItem("providername", "google");
+                             break;
                             default:
-                                alert('action not defined');
                                 break;
+                            }
                         }
-                    }
-                    win.close();
-                };
-            });
+
+                        var providers = sessionStorage.getItem("providername");
+                        if (providers == "facebook" && $LR.options.facebooknative) {
+                            $LR.login();
+
+                        }else if(providers == "google" && $LR.options.googlenative){
+                          $LR.login();
+                        } else {
+                            var redirect = getParamValue("redirect");
+                            if (redirect != "") {
+                                var action = getParamValue("action");
+                                if (action != "") {
+                                    switch (action) {
+
+                                    case "registration":
+
+                                        email = getParamValue("email");
+                                        status = getParamValue("status");
+                                        params.email = email;
+                                        params.status = status;
+                                        params.action = action;
+                                        break;
+
+                                    case "login":
+
+                                        token = getParamValue("lrtoken");
+                                        lrUid = getParamValue("lraccountid");
+                                        params.action = action;
+                                        params.token = token;
+                                        params.lrUid = lrUid;
+                                        break;
+
+                                    case "forgotpassword":
+
+                                        status = getParamValue("status");
+                                        email = getParamValue("email");
+                                        params.status = status;
+                                        params.email = email;
+                                        params.action = action;
+                                        break;
+
+                                    case "sociallogin":
+                                        token = getParamValue("lrtoken");
+                                        params.token = token;
+                                        params.action = action;
+                                        break;
+
+                                    default:
+                                        alert('action not defined');
+                                        break;
+                                    }
+                                }
+                                win.close();
+                            }
+                            ;
+                        }
+                    });
             win.addEventListener('exit', function(event) {
 
                 callback(params);
             });
         },
-
         addJs: function(url, context) {
             context = context || document;
             var head = context.getElementsByTagName('head')[0];
@@ -283,10 +339,10 @@ var $LR = {
 
         },
 
-        nativeCallbackGoogleSuccess: function(userData) {
+        nativeCallbackGoogleSuccess: function(user_data) {
 
             var url = $LR.APIDomain + $LR.accessTokenPass['GOOGLE'];
-            url = url.replace("{API_KEY}", $LR.options.apikey).replace("{ACCESS_TOKEN}", userData);
+            url = url.replace("{API_KEY}", $LR.options.apikey).replace("{ACCESS_TOKEN}", user_data.idToken);
             $LR.util.jsonpCall(url, $LR.util.LoginRadiusNativeCallback);
 
 
@@ -304,7 +360,11 @@ var $LR = {
 
         LoginRadiusNativeCallback: function(callback) {
             sessionStorage.setItem("LRTokenKey", callback['access_token']);
-            $LR.onLogin();
+            var actionfb = ("sociallogin");
+            var lrfbtoken = sessionStorage.getItem("LRTokenKey");
+            sessionStorage.removeItem("providername");
+            window.location = $LR.options.nativepath;
+            win.close();
         },
 
         nativeLogoutFacebookSuccess: function(response) {

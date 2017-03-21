@@ -210,7 +210,10 @@
                 options.apikey = '<LoginRadius API Key>';
 
                 //Toggle native, defaults to false
-                options.native = false;
+                options.facebooknative = false;
+                options.googlenative = false;
+			    options.googlewebid="";         // if you set google native login then you must be add your webClientId
+                options.nativepath="Profile.html";
 
                 //Initialize our interface. After this is invoked, your users should be able to login
                 $LR.init(options);

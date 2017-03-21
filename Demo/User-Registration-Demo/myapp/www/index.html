@@ -163,7 +163,11 @@
             //Set our API Key
             options.apikey = '<LoginRadius API Key>';
             //Toggle native, defaults to false
-            options.native = false;
+             options.facebooknative = false;
+             options.googlenative = false;
+			 options.googlewebid="";         // if you set google native login then you must be add your webClientId
+             options.nativepath="Profile.html";
+             
 
             //Initialize the function that will handle the responses from the hosted registration page.
             options.callback = function(params) {
