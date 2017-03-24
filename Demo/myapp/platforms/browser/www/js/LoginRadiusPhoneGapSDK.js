@@ -83,10 +83,10 @@ var $LR = {
     //Api Domain where all LoginRadius calls go.
     // APIDomain: "https://api.loginradius.com",
     //Domain that Hosted User Registration is located on.
-    GoogleScope: "https://www.googleapis.com/auth/plus.login https://www.googleapis.com/auth/userinfo.email",
+
     accessTokenPass: {
         'FACEBOOK': '/api/v2/access_token/facebook?key={API_KEY}&fb_access_token={ACCESS_TOKEN}',
-        'GOOGLE': '/api/v2/access_token/googlejwt?key={API_KEY}&id_token={ACCESS_TOKEN}'
+        'GOOGLE': '/api/v2/access_token/google?key={API_KEY}&google_access_token={ACCESS_TOKEN}'
     },
 
     //Bindable call for when we receive the token.
@@ -97,6 +97,12 @@ var $LR = {
 
     //Instead of renderInterface, just init. Short, simple, sweet.
     init: function(options) {
+
+        $LR.util.jsonpCall("https://api.loginradius.com/api/v2/app/jsinterface?apikey=" + options.apikey, function handler(data) {
+            $LR.providers = data['Providers'];
+            $LR.providerCallback();
+        });
+
         if (!options.permissions)
             options.permissions = this.options.permissions;
         this.options = options;
@@ -110,7 +116,7 @@ var $LR = {
     login: function(url) {
 
         if (this.options.facebookNative && url.indexOf("facebook") !== -1) {
-            win = window.open("http://", '_blank', 'location=no');
+			  win = window.open("http://", '_blank', 'location=no');
             try {
                 facebookConnectPlugin.login($LR.options.permissions, this.util.nativeCallbackFacebookSuccess,
                     this.util.nativeCallbackFacebookFail);
@@ -118,47 +124,27 @@ var $LR = {
                 alert(e);
             }
         } else if (this.options.googleNative && url.indexOf("google") !== -1) {
-            win = window.open("http://", '_blank', 'location=no');
-            var webClientId = "";
-            if ($LR.options.googlewebid != null || $LR.options.googlewebid != "") {
-                webClientId = $LR.options.googlewebid;
+            try {
+                GoogleLogin.login(this.util.nativeCallbackGoogleSuccess, this.util.nativeCallbackGoogleFailure, []);
+            } catch (e) {
+                alert(e);
             }
-            window.plugins.googleplus.login({
-                    'webClientId': webClientId, // optional clientId of your Web application from Credentials settings of your project - On Android, this MUST be included to get an idToken. On iOS, it is not required.
-                    'scope': $LR.GoogleScope
-                },
-                function(user_data) {
-                    // For the purpose of this example I will store user data on local storage
-                    $LR.util.nativeCallbackGoogleSuccess(user_data);
-
-                },
-                function(msg) {
-                    alert('error: ' + msg);
-                    sessionStorage.removeItem("providername");
-                });
         } else {
             return LRObject.util.openWindow(url);
         }
 
     },
 
-    logout: function(options) {
-        try {
+    logout: function() {
+        if (this.options.native) {
+            try {
+                facebookConnectPlugin.logout(this.util.nativeLogoutFacebookSuccess,
+                    this.util.nativeLogoutFacebookFailure);
+            } catch (e) {
+                alert(e)
+            }
+        } else {
             sessionStorage.removeItem('LRTokenKey');
-            if (options.facebookNative) {
-                facebookConnectPlugin.logout(this.util.nativeLogoutFacebookSuccess, this.util.nativeLogoutFacebookFailure);
-            }
-            if (options.googleNative) {
-
-                window.plugins.googleplus.logout(
-                    function(msg) {
-                        alert(msg); // do something useful instead of alerting
-
-                    }
-                );
-            }
-        } catch (e) {
-            alert(e)
         }
     },
 
@@ -198,7 +184,7 @@ var $LR = {
         nativeCallbackGoogleSuccess: function(userData) {
 
             var url = "https://" + apiDomain + $LR.accessTokenPass['GOOGLE'];
-            url = url.replace("{API_KEY}", LRObject.options.apiKey).replace("{ACCESS_TOKEN}", userData.idToken);
+            url = url.replace("{API_KEY}", $LR.options.apikey).replace("{ACCESS_TOKEN}", userData);
             $LR.util.jsonpCall(url, $LR.util.LoginRadiusNativeCallback);
 
 
@@ -214,7 +200,7 @@ var $LR = {
         },
 
         LoginRadiusNativeCallback: function(callback) {
-            win.close();
+			win.close();
             sessionStorage.setItem("LRTokenKey", callback['access_token']);
             LRObject.loginRadiusHtml5PassToken(callback['access_token']);
 

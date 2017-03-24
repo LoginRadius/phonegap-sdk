@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="format-detection" content="telephone=no" />
+        <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, target-densitydpi=medium-dpi, user-scalable=0" />
+        <link rel="stylesheet" type="text/css" href="css/index.css" />
+        <title>LoginRadius Profile</title>
+        <style type="text/css">
+            .lr-sociallogincontent{ width: 100%; height:auto; float:left;padding: 32px 44px; border:1px solid #ccc;border-radius: 6px;-webkit-border-radius: 6px; -moz-border-radius: 6px;  }
+            .lr-Sociallogintop{ width:100%; height:auto; float:left; font-size:24px; text-align:left; color:#444; font-family: Arial, Helvetica, sans-serif;}
+            .sociallogin_interface{ width:282px; height:auto; float:left; margin-top: 20px; }
+            .sociallogin_interface img{margin-bottom: 5px;margin-left: 3px;  width: 75px; margin-right: 4px;}
+            .sociallogin_userprofile{ display: none; width: 100%}
+            table {
+                font-family:Arial, Helvetica, sans-serif;
+                color:#666;
+                font-size:12px;
+                text-shadow: 1px 1px #fff;
+                background:#eaebec;
+                margin:20px;
+                border:#ccc solid;
+                width: 100%;
+
+            }
+            table tr {
+                text-align: center;
+                padding-left:20px;
+            }
+            table td:first-child {
+                text-align: left;
+                padding-left:20px;
+                border-left: 0;
+            }
+            table td {
+                padding:10px;
+                background: #fafafa;
+                background: -webkit-gradient(linear, left top, left bottom, from(#fbfbfb), to(#fafafa));
+                background: -moz-linear-gradient(top,  #fbfbfb,  #fafafa);
+            }
+            table tr.even td {
+                background: #f6f6f6;
+                background: -webkit-gradient(linear, left top, left bottom, from(#f8f8f8), to(#f6f6f6));
+                background: -moz-linear-gradient(top,  #f8f8f8,  #f6f6f6);
+            }
+            table tr:last-child td {
+                border-bottom:0;
+            }
+            table tr:hover td {
+                background: #f2f2f2;
+                background: -webkit-gradient(linear, left top, left bottom, from(#f2f2f2), to(#f0f0f0));
+                background: -moz-linear-gradient(top,  #f2f2f2,  #f0f0f0);
+            }
+        </style>
+    </head>
+    <body>
+ <script type="text/javascript" src="cordova.js"></script>
+ <script type="text/javascript" src="js/index.js"></script>
+ <script src="js/LoginRadiusPhoneGapSDK.js"></script>
+ <script src="js/LoginRadiusV2.js"></script>
+       <!--Show the user's profile after Login -->
+        <div class="sociallogin_userprofile" id="sociallogin_userprofile">
+
+            <table border="0">
+                <tr>
+                    <td class="userprofile_label" colspan="2"><img id="userimage" height="150px;" alt="profile_image" />
+                        <span style="text-align:right;float:right;vertical-align: top;border: 0;">
+                            <a class="" href="#" onclick="Logout();" style="border:0;color:#9095AA">Logout</a>
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="userprofile_label">ID</td>
+                    <td id="ID" class="userprofile_value"></td>
+                </tr>
+                <tr>
+                    <td class="userprofile_label">Provider</td>
+                    <td id="Provider" class="userprofile_value"></td>
+                </tr>
+                <tr>
+                    <td class="userprofile_label">Name</td>
+                    <td id="username" class="userprofile_value"></td>
+                </tr>
+
+                <tr>
+                    <td class="userprofile_label">EmailID</td>
+                    <td id="emailid" class="userprofile_value"></td>
+                </tr>
+                <tr>
+                    <td class="userprofile_label">Birth Date</td>
+                    <td id="birthdate" class="userprofile_value"></td>
+                </tr>
+                <tr>
+                    <td class="userprofile_label">Gender</td>
+                    <td id="gender" class="userprofile_value"></td>
+                </tr>
+                <tr>
+                    <td class="userprofile_label">Profile Url</td>
+                    <td id="profileurl" class="userprofile_value"></td>
+                </tr>
+            </table>
+        </div>
+		
+		
+		
+
+        <!-- Scripts for LoginRadius. We need the HTML 5 SDK and the PhoneGap SDK -->
+     
+
+        
+        <!-- Custom Scripts -->
+        <script type="text/javascript" charset="utf-8">
+
+        //Logout cleanup
+        function Logout(){
+			sessionStorage.removeItem('LRTokenKey');
+            window.location="index.html";
+        }
+
+        //Device APIs are available
+        window.onload = function() {
+            
+            var token = LoginRadiusSDK.getToken();
+
+            //Don't rely on the token for any sensitive transactions, only for getting data.
+            if (token) {
+                loadUserprofile();
+            }
+            else {
+              // window.location.href="index.html";
+            }
+
+            //Invoke the user profile API from the HTML 5 SDK.
+            function loadUserprofile() {
+                    LoginRadiusSDK.getUserprofile(function (userprofile) {
+                    document.getElementById('sociallogin_userprofile').style.display = "block";
+                    document.getElementById('userimage').src = userprofile.ImageUrl;
+                    document.getElementById('ID').innerHTML = userprofile.ID;
+                    document.getElementById('Provider').innerHTML = userprofile.Provider;
+                    document.getElementById('username').innerHTML = (userprofile.FirstName || '') + ' ' + (userprofile.MiddleName || '') + ' ' + (userprofile.LastName || '');
+                    document.getElementById('emailid').innerHTML = userprofile.Email && userprofile.Email.length > 0 ? userprofile.Email[0].Value : '';
+                    document.getElementById('birthdate').innerHTML = userprofile.BirthDate;
+                    document.getElementById('gender').innerHTML = userprofile.Gender;
+                    document.getElementById('profileurl').innerHTML = userprofile.ProfileUrl;
+                });
+            }
+        }
+        </script>
+    </body>
+</html>

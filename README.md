@@ -14,64 +14,28 @@ Please visit [here](http://www.loginradius.com/) for more information.
 
 #### There are two projects in the library:
 a. Demo
-   1)User-Registration-Demo
-   2)SocialLogin Demo
-b. PhoneGapSDK -This is the LoginRadius SDK
+  
+b. LoginRadiusPhoneGapSDK -This is the LoginRadius SDK
 
-##### User-Registration-Demo
+##### Demo
 1.Put the value according to your requirement in index.html
 
 #### Index.html
 
 ```ruby
-   options.apikey = '<LoginRadius API Key>';
-   options.promptPasswordOnSocialLogin='true';
-   options.facebooknative = false;
-   options.googlenative = false;
-   options.googlewebid="";         // if you set google native login then you must be add your webClientId
-   options.nativepath="Profile.html";
-   options.V2RecaptchaSiteKey="";
+var commonOptions = {};
+commonOptions.apiKey = "<your loginradius api key>";
+commonOptions.appName = "<LoginRadius site name>";
+commonOptions.hashTemplate = true;
+commonOptions.accessTokenResponse = true;
+commonOptions.phoneLogin = false;
+commonOptions.sott = "<Get_Sott>";
+commonOptions.verificationUrl = "https://auth.lrcontent.com/mobile/verification/index.html";
+commonOptions.callbackUrl = 'LoginRadiusPhoneGapSDK.2.0.0/login';
+commonOptions.isMobile = true;
+commonOptions.debugMode= false;
+commonOptions.formValidationMessage = true;
+var LRObject = new LoginRadiusV2(commonOptions);
 ```
 
-2.Finally, setup elements to trigger the functions that will direct your users to the relevant hosted interface.
-```javascript
-    <div class="lr-sociallogincontent">
-        <a onclick="$LR.util.lrRegister();"> Register</a>
-    </div>
-    <!--Open the Login(social and email/password) interface on click of this element -->
-    <div class="lr-sociallogincontent">
-        <a onclick="$LR.util.lrLogin();">Login</a></br>
-    </div>
-    <!--Open the Social Login interface on click of this element -->
-    <div class="lr-sociallogincontent">
-        <a onclick="$LR.util.lrSocial();">Social Login</a></br>
-    </div>
-    <div class="lr-sociallogincontent">
-    <!--Open the Forgot password interface on click of this element -->
-        <a onclick="$LR.util.lrForgotPassword();">Forgot Password</a></br>
-	</div>
-    
-```
-	
-	
-#### SocialLogin-Demo
-1.Put the value according to your requirement in index.html
 
-#### Index.html
-
-```ruby
-  options.apikey = '<LoginRadius API Key>';
-  options.facebooknative = false;
-  options.googlenative = false;
-  options.googlewebid="";         // if you set google native login then you must be add your webClientId
-  options.nativepath="Profile.html";
-  $LR.init(options);
-```
-
-2.Finally, setup elements to trigger the functions that will direct your users to the relevant provider interface.
-```ruby
-  <a href="#" onclick="$LR.login('Facebook');"><img src="img/Facebook.png"></a>
-  <a href="#" onclick="$LR.login('Twitter');"><img src="img/Twitter.png"></a>
-  <a href="#" onclick="$LR.login('Google');"><img src="img/Google.png"></a>
-    
-```
