@@ -1,4 +1,10 @@
-> **LoginRadius PhoneGap SDK Change Log** provides information regarding what has changed, more specifically what changes, improvements and bug fix has been made to the SDK. For more details please refer to the [LoginRadius API Documention](http://apidocs.loginradius.com/docs/phonegap)
+> **LoginRadius PhoneGap SDK Change Log** provides information regarding what has changed, more specifically what changes, improvements and bug fix has been made to the SDK. For more details please refer to the [LoginRadius API Documention](https://docs.loginradius.com/api/v2/mobile-libraries/phonegap)
+
+### Version 3.0.1
+Released on **October 05,  2017**
+
+##### Bug Fixes
+  - Fixed IOS build time issue in Xcode-9.
 
 
 ### Version 3.0.0
@@ -6,18 +12,18 @@ Released on **March 24,  2017**
 
 ##### Enhancements
 
-  - Remove Hosted Page Dependency From LoginRadius PhoneGap SDK.
-  - Added PhoneNuber and UserName Login.
-  - Fully Customizable SDK.
-  - Added Google and Facebook Native Login for Better Native User Experience.
-  - Added New Multiple APIs For Better User Experience.
-  - EndUser Add and Remove Multiple Emails.
-  - Added Account Linking and Unlinking in SDK.
-  - Added Update Profile Feature in SDK.
-  - Added CustomeObject API,Custom objects are custom database tables that allow you to store custom data points, like payment info, activity etc.
-  - Significantly improved code performance.
-  - Handled Network connection error and failures.
-  - LoginRadius PhoneGap SDK Support Single Page Application View For better User Experience.
+ - Removed Hosted Page dependency.
+ - Added Phone Number and Username login.
+ - Fully customizable SDK.
+ - Added new multiple APIs for better user experience.
+ - End user can add and remove multiple emails.
+ - Added Account Linking and unlinking in SDK.
+ - Added update Profile feature in SDK.
+ - Added Google and Facebook native login for better native user experience.
+ - Significantly improved code performance.
+ - Handled network connection error and failures.
+ - Added CustomeObject API,Custom objects are custom database tables that allow you to store custom data points, like payment info, activity etc.
+ - LoginRadius PhoneGap SDK support single page application view for better user experience.
 
 
 ### Version 2.1.0
