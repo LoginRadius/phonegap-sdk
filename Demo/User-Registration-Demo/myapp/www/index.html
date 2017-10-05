@@ -160,12 +160,13 @@
             document.querySelector('.app').setAttribute('style', 'display:none;');
             var options = {};
 
-            //Set our API Key
-            options.apikey = '<LoginRadius API Key>';
-            //Toggle native, defaults to false
+             //Set our API Key
+             options.apikey = '<LoginRadius API Key>';
+             //Toggle native, defaults to false
              options.facebooknative = false;
              options.googlenative = false;
-			 options.googlewebid="";         // if you set google native login then you must be add your webClientId
+			 options.SafariViewController=true;
+			 options.googlewebid=""; // if you set google native login then you must be add your webClientId
              options.nativepath="Profile.html";
              
 
@@ -195,6 +196,12 @@
                         var forgotmessage = "An email has been sent to " + params.email + ". Click on the forgot password link to reset password.";
                         $(".messageinfo").html(forgotmessage);
                         break;
+                        
+                    case "emailnotverfied":
+                        var emailnotver = "Email Verification message send successfully.Please verify your account.";
+                        $(".messageinfo").html(emailnotver);
+
+                        break;
                     default:
                        // alert('action not defined');
                         break;
@@ -203,7 +210,14 @@
             //Initialize the LoginRadius User Registration object
             $LR.init(options);
         };
-    </script>
+</script>
+<script type="text/javascript">
+    function handleOpenURL(url) {
+        setTimeout(function() {
+            $LR.util.handleUrl(url, $LR.options.callback);
+        }, 10);
+    }
+</script>
 <p style="text-align:center; margin-top: 1cm;"><img src="img/loginradiuslogo.png"></p>
 <!--Display message container -->
 <div id="messageinfo" class="messageinfo" style="text-transform:none !important;  margin-top: 1cm;"></div>

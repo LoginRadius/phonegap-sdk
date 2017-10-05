@@ -1,6 +1,19 @@
 > **LoginRadius PhoneGap SDK Change Log** provides information regarding what has changed, more specifically what changes, improvements and bug fix has been made to the SDK. For more details please refer to the [LoginRadius API Documention](http://apidocs.loginradius.com/docs/phonegap)
 
 
+### Version 2.2.0
+Released on **October 05,  2017**
+
+##### Enhancements
+
+  - Added SafariViewController based login for better user Experience.
+  - Update demo compatible with IOS 11.
+  - Significantly improved code performance.
+ 
+##### Bug Fixes
+
+  - Fixed build time issue in Xcode-9.
+
 ### Version 2.1.0
 Released on **March 21,  2017**
 
@@ -39,4 +52,11 @@ Released on **july 15,  2016**
 
 ##### Bug Fixes
  - Handled social ID provider Empty email address scenario. 
+ 
+ 
+ 
+
+
+
+
  

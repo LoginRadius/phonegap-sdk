@@ -84,7 +84,7 @@ var $LR = {
     //Api Domain where all LoginRadius calls go.
     APIDomain: "https://api.loginradius.com",
     //Domain that Hosted User Registration is located on.
-    HostedDomain: "https://cdn.loginradius.com/hub/prod/Theme/mobile-v2/index.html",
+    HostedDomain: "https://cdn.loginradius.com/hub/prod/Theme/mobile-v4/index.html",
     //Access tokens for native login are passed to the backend for parsing
     accessTokenPass: {
         'FACEBOOK': '/api/v2/access_token/facebook?key={API_KEY}&fb_access_token={ACCESS_TOKEN}',
@@ -92,15 +92,14 @@ var $LR = {
     },
 
     //Bindable call for when we receive the token.
-    onLogin: {},
+    onLogin: function() {},
 
     //Bindable call after fetching the provider list.
     providerCallback: function() {},
 
     //Instead of renderInterface, just init. Short, simple, sweet.
     init: function(options) {
-
-        $LR.util.jsonpCall("https://api.loginradius.com/api/v2/app/jsinterface?apikey=" + options.apikey, function handler(data) {
+        $LR.util.jsonpCall("http://cdn.loginradius.com/interface/json/"+options.apikey+".json", function handler(data) {
             $LR.providers = data['Providers'];
             $LR.providerCallback();
         });
@@ -112,10 +111,8 @@ var $LR = {
 
     //Public function for logging in via a provider string name.
     login: function(provider) {
-         var ref = cordova.InAppBrowser.open('http://', '_blank', 'location=no');   //open new  inappbrowser window for native login background 
-        var nativefbprovider = sessionStorage.getItem("providername");
-
-        if ($LR.options.facebooknative && nativefbprovider == "facebook") {
+       var ref = cordova.InAppBrowser.open('http://', '_blank', 'location=no');   //open new  inappbrowser window for native login background
+        if ($LR.options.facebooknative && provider == "facebook") {
             try {
                 facebookConnectPlugin.login($LR.options.permissions,
                         this.util.nativeCallbackFacebookSuccess,
@@ -124,31 +121,29 @@ var $LR = {
                 alert(e);
                  sessionStorage.removeItem("providername");
             }
-        } else if (this.options.googlenative && nativefbprovider == "google") {
-               var webClientId="";
+        } else if (this.options.googlenative && provider == "google") {
+            var webClientId="";
 
-               if($LR.options.googlewebid!=null ||$LR.options.googlewebid!=""){
-               webClientId=$LR.options.googlewebid;
-               }
-               window.plugins.googleplus.login({
+            if($LR.options.googlewebid!=null ||$LR.options.googlewebid!=""){
+                webClientId=$LR.options.googlewebid;
+            }
+            window.plugins.googleplus.login({
                'webClientId': webClientId, // optional clientId of your Web application from Credentials settings of your project - On Android, this MUST be included to get an idToken. On iOS, it is not required.
                'scope': $LR.GoogleScope
-           },
-      function (user_data) {
-        // For the purpose of this example I will store user data on local storage
-        $LR.util.nativeCallbackGoogleSuccess(user_data);
-
-      },function (msg) {
-      alert('error: ' + msg);
-       sessionStorage.removeItem("providername");
-    });
-} else {
-
-           var url = $LR.util.getProviderUrl(provider);
+            },
+            function (user_data) {
+                // For the purpose of this example I will store user data on local storage
+                $LR.util.nativeCallbackGoogleSuccess(user_data);
+            },function (msg) {
+                alert('error: ' + msg);
+                sessionStorage.removeItem("providername");
+            });
+        } else {
+            var url = $LR.util.getProviderUrl(provider);
                       console.log(url);
                       $LR.util.openWindow(url);
 
-  }},
+      }},
 
     logout: function() {
 
@@ -196,103 +191,137 @@ var $LR = {
             },
        
 
-      openWindowUserRegistration : function(_url, callback) {
+      openWindowUserRegistration : function(url, callback) {
 
-            var email; // getting email for registration and forgot password
-            var status; // getting status for registration and forgot password
-            var token; // getting token for call api and getting userprofile
-            var lrUid; //getting uid for login
+            if (!url) return false;
+            if($LR.options.SafariViewController){
+            SafariViewController.isAvailable(function (available) {
 
-            if (!_url)
-                return false;
-            win = window.open(_url, '_blank', 'location=no');
-            win.addEventListener('loadstop',
-                    function(event) {
+                                url+="&customRedirect=true";
 
-                        var getParamValue = function(param) {
-                            var regex = new RegExp("[\\?&]" + param
-                                    + "=([^&#]*)"), results = regex
-                                    .exec(event.url);
-                            return results === null ? ""
-                                    : decodeURIComponent(results[1].replace(
-                                            /\+/g, " "));
-                        };
+            					if($LR.options.googlenative)
+            						url+="&googleNative=true";
+            					if($LR.options.facebooknative)
+            						url+="&facebookNative=true";
 
-                        var provider = getParamValue("provider");
-                        if (provider != null) {
-                            switch (provider) {
-                            case "facebook":
-                            sessionStorage.setItem("providername", "facebook");
-                            break;
-                             case "google":
-                             sessionStorage.setItem("providername", "google");
-                             break;
-                            default:
-                                break;
-                            }
-                        }
+                                SafariViewController.show(
+                                {
+            						url: url,
+            						hidden: false, // default false. You can use this to load cookies etc in the background (see issue #1 for details).
+            						animated: false, // default true, note that 'hide' will reuse this preference (the 'Done' button will always animate though)
+            						transition: 'curl', // (this only works in iOS 9.1/9.2 and lower) unless animated is false you can choose from: curl, flip, fade, slide (default)
+            						enterReaderModeIfAvailable: false // default false
+                                },
+                                // this success handler will be invoked for the lifecycle events 'opened', 'loaded' and 'closed'
+                                function(result)
+                                {
+            						if (result.event === 'opened') {
+            						  console.log('opened');
+            						} else if (result.event === 'loaded') {
+            						  console.log('loaded');
+            						} else if (result.event === 'closed') {
+            						  console.log('closed');
+            						}
+                                },
+                                function(msg)
+                                {
+            						console.log("KO: " + msg);
+                                })
+                             });//end of SafariViewController.isAvailable(func{});
+                    }else{
 
-                        var providers = sessionStorage.getItem("providername");
-                        if (providers == "facebook" && $LR.options.facebooknative) {
-                            $LR.login();
+                    var email; // getting email for registration and forgot password
+                    var status; // getting status for registration and forgot password
+                    var token; // getting token for call api and getting userprofile
+                    var lrUid; //getting uid for login
+                    win = window.open(url, '_blank', 'location=no');
+                    win.addEventListener('loadstart', function(event) {
+                    var getParamValue = function(param) {
+			        var regex = new RegExp("[\\?&]" + param + "=([^&#]*)"),
+				    results = regex.exec(event.url);
+				    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+					};
+                     var provider = getParamValue("provider");
+                    if (provider == "facebook" && $LR.options.facebooknative) {
+                     $LR.login(provider);
+                    }else if(provider == "google" && $LR.options.googlenative){
+                     $LR.login(provider);
+                     }
+               });
 
-                        }else if(providers == "google" && $LR.options.googlenative){
-                          $LR.login();
-                        } else {
-                            var redirect = getParamValue("redirect");
-                            if (redirect != "") {
-                                var action = getParamValue("action");
-                                if (action != "") {
-                                    switch (action) {
+                    win.addEventListener('loadstop',
+                            function(event) {
 
-                                    case "registration":
+                                var getParamValue = function(param) {
+                                    var regex = new RegExp("[\\?&]" + param
+                                            + "=([^&#]*)"), results = regex
+                                            .exec(event.url);
+                                    return results === null ? ""
+                                            : decodeURIComponent(results[1].replace(
+                                                    /\+/g, " "));
+                                };
 
-                                        email = getParamValue("email");
-                                        status = getParamValue("status");
-                                        params.email = email;
-                                        params.status = status;
-                                        params.action = action;
-                                        break;
+                                    var redirect = getParamValue("redirect");
+                                    if (redirect != "") {
+                                        var action = getParamValue("action");
+                                        if (action != "") {
+                                            switch (action) {
 
-                                    case "login":
+                                            case "registration":
 
-                                        token = getParamValue("lrtoken");
-                                        lrUid = getParamValue("lraccountid");
-                                        params.action = action;
-                                        params.token = token;
-                                        params.lrUid = lrUid;
-                                        break;
+                                                email = getParamValue("email");
+                                                status = getParamValue("status");
+                                                params.email = email;
+                                                params.status = status;
+                                                params.action = action;
+                                                break;
 
-                                    case "forgotpassword":
+                                            case "login":
 
-                                        status = getParamValue("status");
-                                        email = getParamValue("email");
-                                        params.status = status;
-                                        params.email = email;
-                                        params.action = action;
-                                        break;
+                                                token = getParamValue("lrtoken");
+                                                lrUid = getParamValue("lraccountid");
+                                                params.action = action;
+                                                params.token = token;
+                                                params.lrUid = lrUid;
+                                                break;
 
-                                    case "sociallogin":
-                                        token = getParamValue("lrtoken");
-                                        params.token = token;
-                                        params.action = action;
-                                        break;
+                                            case "forgotpassword":
 
-                                    default:
-                                        alert('action not defined');
-                                        break;
-                                    }
-                                }
-                                win.close();
-                            }
-                            ;
-                        }
+                                                status = getParamValue("status");
+                                                email = getParamValue("email");
+                                                params.status = status;
+                                                params.email = email;
+                                                params.action = action;
+                                                break;
+
+                                            case "social":
+                                            case "sociallogin":
+                                                token = getParamValue("lrtoken");
+                                                params.token = token;
+                                                params.action = action;
+                                                break;
+
+                                            case "emailnotverfied":
+                                                params.action = action;
+                                                break;
+
+                                            default:
+                                                alert('action: ' + action +' is not defined');
+                                                break;
+                                            }
+                                        }
+                                        win.close();
+                                    };
+
+
+                            });
+                    win.addEventListener('exit', function(event) {
+
+                        callback(params);
                     });
-            win.addEventListener('exit', function(event) {
 
-                callback(params);
-            });
-        },
+                }}
+        ,
         addJs: function(url, context) {
             context = context || document;
             var head = context.getElementsByTagName('head')[0];
@@ -303,22 +332,110 @@ var $LR = {
 
             return js;
         },
+        
+        handleUrl:function(url){
+            SafariViewController.hide();
+            var getParamValue = function(param,url) {
+                var regex = new RegExp("[\\?&]" + param + "=([^&#]*)"),
+                    results = regex.exec(url);
+                return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+            };
+            
+            if(url.indexOf('login')!=-1)
+            {
+                
+                var token=getParamValue("lrtoken",url);
+                var lrUid=getParamValue("lraccountid",url);
+                var response={
+                    action:"login",
+                    token: token,
+                    lrUid: lrUid
+                }
+                $LR.options.callback(response);
+            }
+            if(url.indexOf('social')!=-1)
+            {
+                if (getParamValue("action",url)=="emailnotverfied")
+                {
+                    var response={
+                        action:"emailnotverfied"
+                    }
+                    $LR.options.callback(response);
+                }else
+                {
+                    var token=getParamValue("lrtoken",url);
+                    var lrUid=getParamValue("lraccountid",url);
+                    var response={
+                        action:"sociallogin",
+                        token: token,
+                        lrUid: lrUid
+                    }
+                    $LR.options.callback(response);
+                }
+
+            }
+            if(url.indexOf('registration')!=-1)
+            {
+                
+                var email=getParamValue("email",url);
+                var status=getParamValue("status",url);
+                var response={
+                    action:"registration",
+                    email: email,
+                    status: status
+                }
+                $LR.options.callback(response);
+            }
+            if(url.indexOf('forgotpassword')!=-1)
+            {
+                
+                var email=getParamValue("email",url);
+                var status=getParamValue("status",url);
+                var response={
+                    action:"forgotpassword",
+                    email: email,
+                    status: status
+                }
+                $LR.options.callback(response);
+            }
+            if(url.indexOf('googleNative')!=-1)
+            {
+                setTimeout(function(){
+                 $LR.login('google');
+                },1000);
+            }
+            if(url.indexOf('facebookNative')!=-1)
+            {
+                setTimeout(function(){
+                 $LR.login('facebook');
+                },1000);
+            }
+            if(url.indexOf('emailnotverfied')!=-1)
+            {
+                var response={
+                    action:"emailnotverfied"
+                }
+                $LR.options.callback(response);
+            }
+            if(url.indexOf('denied_access')!=-1)
+            {
+                win.close()
+            }
+        },
 
         jsonpCall: function(url, handle) {
-            var func = 'Loginradius' + Math.floor((Math.random() * 1000000000000000000) + 1);
-            window[func] = function(data) {
+            var func = 'loginRadiusAppJsonLoaded';
+            window[func] = function (data) {
+            
                 handle(data);
-
                 window[func] = undefined;
                 try {
                     delete window[func];
                 } catch (e) {}
-
-                document.getElementsByTagName('head')[0].removeChild(js);
             };
 
             var endurl = url.indexOf('?') != -1 ? url + '&callback=' + func : url + '?callback=' + func;
-            var js = this.addJs(endurl);
+            var js = $LR.util.addJs(endurl);
         },
 
         searchProviders: function(provider) {
@@ -362,7 +479,6 @@ var $LR = {
             sessionStorage.setItem("LRTokenKey", callback['access_token']);
             var actionfb = ("sociallogin");
             var lrfbtoken = sessionStorage.getItem("LRTokenKey");
-            sessionStorage.removeItem("providername");
             window.location = $LR.options.nativepath;
             win.close();
         },

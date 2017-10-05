@@ -28,6 +28,7 @@ b. PhoneGapSDK -This is the LoginRadius SDK
    options.promptPasswordOnSocialLogin='true';
    options.facebooknative = false;
    options.googlenative = false;
+   options.SafariViewController=true;
    options.googlewebid="";         // if you set google native login then you must be add your webClientId
    options.nativepath="Profile.html";
    options.V2RecaptchaSiteKey="";
@@ -63,6 +64,7 @@ b. PhoneGapSDK -This is the LoginRadius SDK
   options.apikey = '<LoginRadius API Key>';
   options.facebooknative = false;
   options.googlenative = false;
+  options.SafariViewController=true;
   options.googlewebid="";         // if you set google native login then you must be add your webClientId
   options.nativepath="Profile.html";
   $LR.init(options);

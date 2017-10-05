@@ -19,6 +19,13 @@
         "cordova-plugin-contacts": {
             "PACKAGE_NAME": "com.loginradius.myapp"
         },
+        "cordova-plugin-customurlscheme": {
+            "URL_SCHEME": "Your Login Radius Site Name",
+            "ANDROID_SCHEME": " ",
+            "ANDROID_HOST": " ",
+            "ANDROID_PATHPREFIX": "/",
+            "PACKAGE_NAME": "com.loginradius.myapp"
+        },
         "cordova-plugin-device": {
             "PACKAGE_NAME": "com.loginradius.myapp"
         },
@@ -65,11 +72,6 @@
             "PACKAGE_NAME": "com.loginradius.myapp"
         },
         "cordova-plugin-x-toast": {
-            "PACKAGE_NAME": "com.loginradius.myapp"
-        },
-        "phonegap-facebook-plugin": {
-            "APP_ID": "1114177715288709",
-            "APP_NAME": "Logi­n­R­a­d­i­u­s­test",
             "PACKAGE_NAME": "com.loginradius.myapp"
         }
     },
