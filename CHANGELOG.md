@@ -14,7 +14,7 @@ Released on **August 13,  2018**
  - Added custom scope for social login.
 
 ### Version 3.0.1
-Released on **October 04,  2017**
+Released on **October 05,  2017**
 
 ##### Bug Fixes
   - Fixed ios build time issue in Xcode-9.
