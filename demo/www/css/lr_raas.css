@@ -15,7 +15,7 @@
 
 .loginradius--form-element-content label {
     margin-right: 7px;
-    width: 70px;
+    width: 100%; text-align: left;
 	
 }
 input#loginradius-login-emailid{
@@ -864,115 +864,128 @@ div.loginradius-raas-validation-message {
     width: 0;
 }
 .lr-sl-icon-amazon:before {
-    background-position: 0 0%;
+    background-position: 0 14.1%;
 }
 .lr-sl-icon-aol:before {
-    background-position: 0 2.857142857142857%;
+    background-position: 0 16.5%;
 }
 .lr-sl-icon-disqus:before {
-    background-position: 0 5.714285714285714%;
+    background-position: 0 19%;
 }
 .lr-sl-icon-facebook:before {
-    background-position: 0 8.571428571428571%;
+    background-position: 0 2.1%;
 }
 .lr-sl-icon-foursquare:before {
-    background-position: 0 11.428571428571429%;
+    background-position: 0 21.2%;
 }
 .lr-sl-icon-github:before {
-    background-position: 0 14.285714285714286%;
+    background-position: 0 23.5%;
 }
 .lr-sl-icon-googleplus:before {
     background-position: 0 17.142857142857142%;
 }
 .lr-sl-icon-google:before {
-    background-position: 0 20%;
+    background-position: 0 106.9%;
 }
 .lr-sl-icon-hyves:before {
-    background-position: 0 22.857142857142858%;
+    background-position: 0 26%;
 }
 .lr-sl-icon-instagram:before {
-    background-position: 0 25.714285714285715%;
+    background-position: 0 28.4%;
 }
 .lr-sl-icon-kaixin:before {
-    background-position: 0 28.571428571428573%;
+    background-position: 0 30.8%;
 }
 .lr-sl-icon-linkedin:before {
-    background-position: 0 31.42857142857143%;
+    background-position: 0 6.99%;
 }
 .lr-sl-icon-live:before {
-    background-position: 0 34.285714285714285%;
+    background-position: 0 33.1%;
 }
 .lr-sl-icon-livejournal:before {
-    background-position: 0 37.142857142857146%;
+    background-position: 0 35.6%;
 }
+
 .lr-sl-icon-mixi:before {
-    background-position: 0 40%;
+    background-position: 0 37.9%;
 }
 .lr-sl-icon-myspace:before {
     background-position: 0 42.85714285714286%;
 }
 .lr-sl-icon-odnoklassniki:before {
-    background-position: 0 45.714285714285715%;
+    background-position: 0 40.3%;
 }
 .lr-sl-icon-openid:before {
-    background-position: 0 48.57142857142857%;
+    background-position: 0 45.1%;
 }
 .lr-sl-icon-:before {
     background-position: 0 51.42857142857143%;
 }
 .lr-sl-icon-paypal:before {
-    background-position: 0 54.285714285714285%;
+    background-position: 0 47.5%;
 }
 .lr-sl-icon-persona:before {
     background-position: 0 57.142857142857146%;
 }
 .lr-sl-icon-qq:before {
-    background-position: 0 60%;
+    background-position: 0 156.99%;
 }
 .lr-sl-icon-renren:before {
-    background-position: 0 62.85714285714286%;
+    background-position: 0 159.3%;
 }
 .lr-sl-icon-salesforce:before {
-    background-position: 0 65.71428571428572%;
+    background-position: 0 59.4%;
 }
 .lr-sl-icon-stackexchange:before {
-    background-position: 0 68.57142857142857%;
+    background-position: 0 64.2%;
 }
 .lr-sl-icon-steamcommunity:before {
-    background-position: 0 71.42857142857143%;
+    background-position: 0 66.5%;
 }
 .lr-sl-icon-tumblr:before {
     background-position: 0 74.28571428571429%;
 }
 .lr-sl-icon-twitter:before {
-    background-position: 0 77.14285714285714%;
+    background-position: 0 9.4%;
 }
 .lr-sl-icon-verisign:before {
-    background-position: 0 80%;
+    background-position: 0 69%;
 }
 .lr-sl-icon-virgilio:before {
-    background-position: 0 82.85714285714286%;
+    background-position: 0 71.3%;
 }
 .lr-sl-icon-vkontakte:before {
-    background-position: 0 85.71428571428572%;
+    background-position: 0 278.4%;
 }
 .lr-sl-icon-sinaweibo:before {
-    background-position: 0 88.57142857142857%;
+    background-position: 0 61.7%;
 }
 .lr-sl-icon-wordpress:before {
-    background-position: 0 91.42857142857143%;
+    background-position: 0 75.89%;
 }
 .lr-sl-icon-yahoo:before {
-    background-position: 0 94.28571428571429%;
+    background-position: 0 11.7%;
 }
 .lr-sl-icon-xing:before {
-    background-position: 0 97.14285714285714%;
+    background-position: 0 80.7%;
 }
 .lr-sl-icon-mailru:before {
-    background-position: 0 100%;
+    background-position: 0 78.5%;
 }
 .lr-sl-icon-more:before {
     background-position: 0 102.85714285714286%;
+}
+.lr-sl-icon-pinterest:before {
+    background-position: 0 52.3%;
+}
+.lr-sl-icon-line:before {
+    background-position: 0 99.8%;
+}
+.lr-flat-pinterest {
+    background-color: #cb2128;
+}
+.lr-flat-line {
+    background-color: #00c300;
 }
 .lr-flat-amazon {
     background-color: #f90;

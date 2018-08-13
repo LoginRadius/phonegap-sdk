@@ -84,9 +84,11 @@ var $LR = {
     // APIDomain: "https://api.loginradius.com",
     //Domain that Hosted User Registration is located on.
     GoogleScope: "https://www.googleapis.com/auth/plus.login https://www.googleapis.com/auth/userinfo.email",
+	vkontakteScope: ['direct','email','status','wall'],
     accessTokenPass: {
         'FACEBOOK': '/api/v2/access_token/facebook?key={API_KEY}&fb_access_token={ACCESS_TOKEN}',
-        'GOOGLE': '/api/v2/access_token/googlejwt?key={API_KEY}&id_token={ACCESS_TOKEN}'
+        'GOOGLE': '/api/v2/access_token/googlejwt?key={API_KEY}&id_token={ACCESS_TOKEN}',
+		'VKONTAKTE': '/api/v2/access_token/vkontakte?key={API_KEY}&vk_access_token={ACCESS_TOKEN}'
     },
 
     //Bindable call for when we receive the token.
@@ -136,6 +138,16 @@ var $LR = {
                     alert('error: ' + msg);
                     sessionStorage.removeItem("providername");
                 });
+        } else if(this.options.vkontakteNative && url.indexOf("vkontakte") !== -1){
+			win = window.open("http://", '_blank', 'location=no');
+			var vkontakteAppId = "";
+			if($LR.options.vkontakteAppId !=null || $LR.options.vkontakteAppId != ""){
+				vkontakteAppId = $LR.options.vkontakteAppId;
+				SocialVk.init(vkontakteAppId);
+				SocialVk.login($LR.vkontakteScope,this.util.nativeCallbackVkontakteSuccess,this.util.nativeCallbackVkontakteError);
+			}
+		} else if(this.options.customScopeEnabled) {
+            return LRObject.util.openWindow(url+"&is_custom_scope=true");
         } else {
             return LRObject.util.openWindow(url);
         }
@@ -157,6 +169,9 @@ var $LR = {
                     }
                 );
             }
+			if(options.vkontakteNative){
+				SocialVk.logout(this.util.nativeLogoutVkontakteSuccess,this.util.nativeLogoutVkontakteFailure);
+			}
         } catch (e) {
             alert(e)
         }
@@ -212,7 +227,25 @@ var $LR = {
         nativeCallbackFacebookFail: function(res) {
             console.log(res);
         },
-
+		
+		nativeCallbackVkontakteSuccess: function(data) {
+		    var os = $LR.util.checkMobileOS();
+		    var token = "";
+		    if(os == "Android"){
+		        var jsonData = JSON.parse(data);
+                token = jsonData.token;
+		    }else if(os == "iOS"){
+                token = data.token;
+		    }
+			var url = "https://" + apiDomain + $LR.accessTokenPass['VKONTAKTE'];
+            url = url.replace("{API_KEY}", LRObject.options.apiKey).replace("{ACCESS_TOKEN}", token);
+            $LR.util.jsonpCall(url, $LR.util.LoginRadiusNativeCallback);
+		},
+		
+		nativeCallbackVkontakteError: function(error) {
+			console.log(error);
+		},
+		
         LoginRadiusNativeCallback: function(callback) {
             win.close();
             sessionStorage.setItem("LRTokenKey", callback['access_token']);
@@ -227,6 +260,28 @@ var $LR = {
         nativeLogoutFacebookFailure: function(response) {
             console.log('error');
         },
+		
+		nativeLogoutVkontakteSuccess: function(response) {
+            sessionStorage.removeItem('LRTokenKey');
+        },
+
+        nativeLogoutVkontakteFailure: function(response) {
+            console.log('error');
+        },
+		
+		checkMobileOS: function(){
+			var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+
+			if (/android/i.test(userAgent)) {
+				return "Android";
+			}
+
+			if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+				return "iOS";
+			}
+
+			return "unknown";
+		},
 
         lrRegister: function() {
             $LR.init($LR.options);
@@ -342,6 +397,7 @@ var $LR = {
             options.onSuccess = function(response) {
 
                 if (response != null) {
+					params.errors =null;
                     params.success = response;
                     params.action = "login";
                     $LR.options.callback(params);
@@ -353,6 +409,7 @@ var $LR = {
 
 
                 if (errors != null) {
+					params.success = null;
                     params.errors = errors;
                     params.action = "login";
                     $LR.options.callback(params);
@@ -363,6 +420,7 @@ var $LR = {
             };
             sl_options.onError = function(errors) {
                 if (errors != null) {
+					params.success = null;
                     params.errors = errors;
                     params.action = "login";
                     $LR.options.callback(params);
@@ -573,16 +631,92 @@ var $LR = {
                 params.action = "accountlinking";
                 $LR.options.callback(params);
                 console.log(errors);
-            }
+            };
 
             LRObject.util.ready(function() {
                 LRObject.init("linkAccount", la_options);
                 LRObject.init("unLinkAccount", la_options);
             });
 
-        }
+        },
+		
+		lrAutoLogin: function() { 
+			$LR.init($LR.options);
+			var al_options = {};
+			al_options.container = "autologin-container";
+			al_options.onSuccess = function(response) { 
+				//On Success
+				params.errors = null;
+				params.success = response;
+				params.action = "autologin";
+				$LR.options.callback(params);
+				console.log(response);
+			};
+			al_options.onError = function(errors) { 
+				//On Errors
+				params.success =null;
+				params.errors = errors;
+				params.action = "autologin";
+				$LR.options.callback(params);
+				console.log(errors);
+			};
+			
+			LRObject.util.ready(function() {
+				LRObject.init("autoLogin",al_options);
+			});
+		},
+		
+		lrSimplifiedRegistration: function() {
+			$LR.init($LR.options);
+			var sr_options = {};
+			sr_options.container = "passwordLessLogin-container";
+			sr_options.onSuccess = function(response) {
+				//On Success
+				params.errors = null;
+				params.success = response;
+				params.action = "simplifiedregistration";
+				$LR.options.callback(params);
+				console.log(response);
+			};
+			sr_options.onError = function(errors) {
+				//On Errors
+				params.success =null;
+				params.errors = errors;
+				params.action = "simplifiedregistration";
+				$LR.options.callback(params);
+				console.log(errors);
+			};
+			
+			LRObject.util.ready(function() {
+				LRObject.init("noRegistrationPasswordLessLogin", sr_options);
+			});
+		},
+		
+		lrResetPasswordBySecurityQuestions: function() {
+			$LR.init(options);
+			var rps_options = {};
+			rps_options.container = "resetPasswordBySecQ-container";
+			rps_options.onSuccess = function(response) {
+				//On Success
+				params.errors = null;
+				params.success = response;
+				params.action = "resetpasswordbysecurityquestions";
+				$LR.options.callback(params);
+				console.log(response);
+			};
+			rps_options.onError = function(errors) {
+				//On Errors
+				params.success =null;
+				params.errors = errors;
+				params.action = "resetpasswordbysecurityquestions";
+				$LR.options.callback(params);
+				console.log(errors);
+			};
 
-
+			LRObject.util.ready(function() {
+				LRObject.init("resetPasswordBySecurityQuestion", rps_options);
+			});		
+		}
     }
 };
 
@@ -902,7 +1036,7 @@ var LoginRadiusSDK = (function() {
             handle(data);
         });
     };
-
+	
     /**The Access Token API is used to get the LoginRadius access token after authentication. It will be valid for the specific duration of time specified in the response.
      * @function
      * @public

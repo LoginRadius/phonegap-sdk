@@ -1,10 +1,23 @@
 > **LoginRadius PhoneGap SDK Change Log** provides information regarding what has changed, more specifically what changes, improvements and bug fix has been made to the SDK. For more details please refer to the [LoginRadius API Documention](https://docs.loginradius.com/api/v2/mobile-libraries/phonegap)
 
+### Version 3.1.0
+Released on **August 13,  2018**
+
+##### Enhancements
+
+ - Added Vkontakte native login.
+ - Added option to enable instant link login.
+ - Added auto login.
+ - Added password less login/simplified registration.
+ - Added option for projection of fields.
+ - Added reset password by security questions.
+ - Added custom scope for social login.
+
 ### Version 3.0.1
-Released on **October 05,  2017**
+Released on **October 04,  2017**
 
 ##### Bug Fixes
-  - Fixed IOS build time issue in Xcode-9.
+  - Fixed ios build time issue in Xcode-9.
 
 
 ### Version 3.0.0
