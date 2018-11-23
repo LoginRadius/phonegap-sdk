@@ -21,6 +21,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
+//SDK Version 3.2.0
 //The General LR Object.
 var win;
 var params = {};
@@ -83,7 +84,7 @@ var $LR = {
     //Api Domain where all LoginRadius calls go.
     // APIDomain: "https://api.loginradius.com",
     //Domain that Hosted User Registration is located on.
-    GoogleScope: "https://www.googleapis.com/auth/plus.login https://www.googleapis.com/auth/userinfo.email",
+    GoogleScope: "https://www.googleapis.com/auth/plus.login https://www.googleapis.com/auth/userinfo.email https://picasaweb.google.com/data/ https://www.google.com/m8/feeds",
 	vkontakteScope: ['direct','email','status','wall'],
     accessTokenPass: {
         'FACEBOOK': '/api/v2/access_token/facebook?key={API_KEY}&fb_access_token={ACCESS_TOKEN}',
@@ -640,15 +641,15 @@ var $LR = {
 
         },
 		
-		lrAutoLogin: function() { 
+		lrSmartLogin: function() { 
 			$LR.init($LR.options);
 			var al_options = {};
-			al_options.container = "autologin-container";
+			al_options.container = "smartLogin-container";
 			al_options.onSuccess = function(response) { 
 				//On Success
 				params.errors = null;
 				params.success = response;
-				params.action = "autologin";
+				params.action = "smartLogin";
 				$LR.options.callback(params);
 				console.log(response);
 			};
@@ -656,25 +657,25 @@ var $LR = {
 				//On Errors
 				params.success =null;
 				params.errors = errors;
-				params.action = "autologin";
+				params.action = "smartLogin";
 				$LR.options.callback(params);
 				console.log(errors);
 			};
 			
 			LRObject.util.ready(function() {
-				LRObject.init("autoLogin",al_options);
+				LRObject.init("smartLogin",al_options);
 			});
 		},
 		
-		lrSimplifiedRegistration: function() {
+		lrOneTouchLogin: function() {
 			$LR.init($LR.options);
 			var sr_options = {};
-			sr_options.container = "passwordLessLogin-container";
+			sr_options.container = "onetouchLogin-container";
 			sr_options.onSuccess = function(response) {
 				//On Success
 				params.errors = null;
 				params.success = response;
-				params.action = "simplifiedregistration";
+				params.action = "onetouchLogin";
 				$LR.options.callback(params);
 				console.log(response);
 			};
@@ -682,14 +683,38 @@ var $LR = {
 				//On Errors
 				params.success =null;
 				params.errors = errors;
-				params.action = "simplifiedregistration";
+				params.action = "onetouchLogin";
 				$LR.options.callback(params);
 				console.log(errors);
 			};
 			
 			LRObject.util.ready(function() {
-				LRObject.init("noRegistrationPasswordLessLogin", sr_options);
+				LRObject.init("onetouchLogin", sr_options);
 			});
+        },
+        lrPasswordlessLoginValidate: function() {
+			$LR.init(options);
+			var passwordless_options = {};
+			passwordless_options.onSuccess = function(response) {
+				//On Success
+				params.errors = null;
+				params.success = response;
+				params.action = "passwordlessLoginValidate";
+				$LR.options.callback(params);
+				console.log(response);
+			};
+			passwordless_options.onError = function(errors) {
+				//On Errors
+				params.success =null;
+				params.errors = errors;
+				params.action = "passwordlessLoginValidate";
+				$LR.options.callback(params);
+				console.log(errors);
+			};
+
+			LRObject.util.ready(function() {
+				LRObject.init("passwordlessLoginValidate", passwordless_options);
+			});		
 		},
 		
 		lrResetPasswordBySecurityQuestions: function() {
@@ -1036,6 +1061,255 @@ var LoginRadiusSDK = (function() {
             handle(data);
         });
     };
+
+
+    /**This function allows you to check the availablity of a given email.
+     * @function
+     * @public
+     * @param A valid email id
+     * @param handle {CallbackHandler} callback handler, invoke after getting respons from LoginRadius
+     */
+    module.checkEmailAvailability = function(email, handle) {
+        LRObject.api.checkEmailAvailability({
+            email: email
+        },
+         function(response) {
+           handle(response)
+        }, function(errors) {
+           handle(errors)
+        });
+    };
+
+
+     /**This function allows you to check the availablity of a given username.
+     * @function
+     * @public
+     * @param A valid username
+     * @param handle {CallbackHandler} callback handler, invoke after getting respons from LoginRadius
+     */
+    module.checkUserNameAvailability = function(username, handle) {
+        LRObject.api.checkUserNameAvailability({
+            username: username
+        },
+         function(response) {
+           handle(response)
+        }, function(errors) {
+           handle(errors)
+        });
+    };
+
+
+     /**This function allows you to check the availablity of a given phone.
+     * @function
+     * @public
+     * @param A valid phone
+     * @param handle {CallbackHandler} callback handler, invoke after getting respons from LoginRadius
+     */
+
+    module.checkPhoneNumberAvailability = function(phone, handle) {
+        LRObject.api.checkPhoneNumberAvailability({
+            phone: phone
+        },
+         function(response) {
+            handle(response)
+        }, function(errors) {
+            handle(errors)
+        });
+    };
+
+
+
+    /**This function allows you to validate an access_token.
+     * @function
+     * @public
+     * @param A valid access_token
+     * @param handle {CallbackHandler} callback handler, invoke after getting respons from LoginRadius
+     */
+
+    module.validateAccessToken = function(access_token, handle) {
+        LRObject.api.validateToken(access_token,
+        function(response) {
+            handle(response)
+       }, function(errors) {
+            handle(errors)
+       });
+    };
+
+
+    /**This function allows you to invalidate an access_token.
+     * @function
+     * @public
+     * @param A valid access_token
+     * @param handle {CallbackHandler} callback handler, invoke after getting respons from LoginRadius
+     */
+
+    module.invalidateAccessToken = function(access_token, handle) {
+        LRObject.api.invalidateToken(access_token,
+        function(response) {
+            handle(response)
+       }, function(errors) {
+            handle(errors)
+       });
+    };
+
+
+     /**This function allows you to resend email verification.
+     * @function
+     * @public
+     * @param A valid email
+     * @param handle {CallbackHandler} callback handler, invoke after getting respons from LoginRadius
+     */
+
+    module.resendEmailVerification = function(email, handle) {
+        LRObject.api.resendEmailVerification({
+            email: email
+        }, function(response) {
+            handle(response)
+        }, function(errors) {
+            handle(errors)
+        });
+    };
+
+    /**The add email function is used to add additional emails to an existing account.
+     * @function
+     * @public
+     * @param A valid email
+     * @param handle {CallbackHandler} callback handler, invoke after getting respons from LoginRadius
+     */
+
+    module.addEmail = function(email,type, handle) {
+        LRObject.api.addEmail({email:email,type:type},
+        function(response) {
+            handle(response)
+       }, function(errors) {
+           handle(errors)
+       });
+    };
+
+     /**This function allows you to remove Email.
+     * @function
+     * @public
+     * @param A valid email
+     * @param handle {CallbackHandler} callback handler, invoke after getting respons from LoginRadius
+     */
+
+    module.removeEmail = function(email, handle) {
+        LRObject.api.removeEmail({
+            email: email
+        }, function(response) {
+            handle(response)
+        }, function(errors) {
+            handle(errors)
+        });
+    };
+
+
+    /**This function is used to update the configured phone.
+     * @function
+     * @public
+     * @param A valid phone
+     * @param handle {CallbackHandler} callback handler, invoke after getting respons from LoginRadius
+     */
+
+    module.updatePhone = function(phone, handle) {
+        LRObject.api.updatePhone({
+            phone: phone
+        }, function(response) {
+            handle(response)
+        }, function(errors) {
+            handle(errors)
+        });
+    };
+
+
+    /**This function allows you to getCustomObjects.
+     * @function
+     * @public
+     * @param A valid access_token
+     * @param handle {CallbackHandler} callback handler, invoke after getting respons from LoginRadius
+     */
+
+    module.getCustomObjects = function(access_token, handle) {
+        LRObject.api.getCustomObjects(access_token,
+        function(response) {
+            handle(response)
+       }, function(errors) {
+            handle(errors)
+       });
+    };
+
+
+    /**This function allows you to createCustomObject.
+     * @function
+     * @public
+     * @param A valid access_token,payload
+     * @param handle {CallbackHandler} callback handler, invoke after getting respons from LoginRadius
+     */
+
+    module.createCustomObject = function(access_token,payload, handle) {
+        LRObject.api.createCustomObject(access_token,payload,
+        function(response) {
+            handle(response)
+       }, function(errors) {
+            handle(errors)
+       });
+    };
+
+
+    /**This function allows you to getCustomObjectById.
+     * @function
+     * @public
+     * @param A valid access_token,objectrecordid
+     * @param handle {CallbackHandler} callback handler, invoke after getting respons from LoginRadius
+     */
+
+    module.getCustomObjectById = function(access_token,objectrecordid, handle) {
+        LRObject.api.getCustomObjectById(access_token,objectrecordid,
+        function(response) {
+            handle(response)
+       }, function(errors) {
+            handle(errors)
+       });
+    };
+
+
+
+     /**This function allows you to deleteCustomObjectById.
+     * @function
+     * @public
+     * @param A valid access_token,objectrecordid
+     * @param handle {CallbackHandler} callback handler, invoke after getting respons from LoginRadius
+     */
+
+    module.deleteCustomObjectById = function(access_token,objectrecordid, handle) {
+        LRObject.api.deleteCustomObjectById(access_token,objectrecordid,
+        function(response) {
+            handle(response)
+       }, function(errors) {
+            handle(errors)
+       });
+    };
+
+
+
+    /**This function allows you to updateCustomObjectById.
+     * @function
+     * @public
+     * @param A valid access_token,objectrecordid,payload
+     * @param handle {CallbackHandler} callback handler, invoke after getting respons from LoginRadius
+     */
+
+    module.updateCustomObjectById = function(access_token,objectrecordid,payload, handle) {
+        LRObject.api.updateCustomObjectById(access_token,objectrecordid,payload,
+        function(response) {
+            handle(response)
+       }, function(errors) {
+            handle(errors)
+       });
+    };
+
+
+
 	
     /**The Access Token API is used to get the LoginRadius access token after authentication. It will be valid for the specific duration of time specified in the response.
      * @function

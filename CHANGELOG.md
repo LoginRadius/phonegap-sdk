@@ -1,5 +1,20 @@
 > **LoginRadius PhoneGap SDK Change Log** provides information regarding what has changed, more specifically what changes, improvements and bug fix has been made to the SDK. For more details please refer to the [LoginRadius API Documention](https://docs.loginradius.com/api/v2/mobile-libraries/phonegap)
 
+### Version 3.2.0
+Released on **November 23,  2018**
+
+##### Enhancements
+
+ - Added New Check Email,UserName and Phone Availability APIs.
+ - Added New Validate and InValidate AccessToken APIs.
+ - Added New Add and Remove Email APIs.
+ - Added New Update Phone API.
+ - Added New Resend Email Verification API.
+ - Improve Data Handling For CustomeObject API,Custom objects are custom database tables that allow you to store custom data points, like payment info, activity etc.
+ 
+##### Breaking Changes
+For developers migrating from v3.1.0, there will be some breaking changes in terms of SDK implementation. In this version, we have updated endpoints and renamed "Auto Login" to "Smart Login", "No Registration/Simplified Registration" to "One touch Login" and "Instant Link Login" to "PasswordLess Login". Also, changed the methods of the above APIs accordingly.
+
 ### Version 3.1.0
 Released on **August 13,  2018**
 
